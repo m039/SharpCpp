@@ -5,6 +5,7 @@
 workspace "CSharpCpp"
   configurations { "Debug", "Release" }
   location "build"
+  framework "4.5"
 
   filter "configurations:Debug"
   defines { "DEBUG" }
@@ -20,7 +21,13 @@ project "App"
   language "C#"
 
   files { "App/**.cs" }
-  links { "Library" }
+  links {
+    "Library",
+    "System",
+    "glib-sharp",
+    "gtk-sharp",
+    "atk-sharp"
+  }
 
 -- Library
 
@@ -29,4 +36,3 @@ project "Library"
   language "C#"
 
   files { "Library/**.cs" }
-

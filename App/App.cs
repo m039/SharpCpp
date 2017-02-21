@@ -1,33 +1,18 @@
-﻿using System;
-using System.IO;
-using System.Reflection;
-using System.Runtime.InteropServices;
-using CSharpFooBarLibrary;
+﻿using Gtk;
+using System;
 
-namespace CSharpConsoleProject
+class Hello
 {
-	class MainClass
+
+	static void Main()
 	{
-		public static void TestFoo()
-		{
-			var foo = new Foo();
+		Application.Init();
 
-			Console.Write(
-				"== Foo ==\n" +
-				"Foo.number: " + foo.GetNumber() + "\n" +
-				"Foo.SetNumber(45)\n"
-			);
+		Window window = new Window("helloworld");
+		window.Resize(800, 800);
+		window.Show();
 
-			foo.number = 45;
+		Application.Run();
 
-			Console.Write(
-				"Foo.number: " + foo.GetNumber() + "\n"
-			);
-		}
-
-		public static void Main(string[] args)
-		{
-			TestFoo();
-		}
 	}
 }
