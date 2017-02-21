@@ -82,9 +82,19 @@
     <Compile Include="ViewController.designer.cs">
       <DependentUpon>ViewController.cs</DependentUpon>
     </Compile>
+    <Compile Include="DragAndDropView.cs" />
+    <Compile Include="DragAndDropView.designer.cs">
+      <DependentUpon>DragAndDropView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EditTextView.cs" />
+    <Compile Include="EditTextView.designer.cs">
+      <DependentUpon>EditTextView.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Main.storyboard" />
+    <InterfaceDefinition Include="DragAndDropView.xib" />
+    <InterfaceDefinition Include="EditTextView.xib" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
 </Project>

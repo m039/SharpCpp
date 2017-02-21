@@ -18,6 +18,19 @@ namespace CSharpCpp
 			// Do any additional setup after loading the view.
 
 			LabelAboveInputCode.StringValue = "Huyak";
+			InputCode.TextDidChange += OnTextChanged;
+			DragAndDropArea.DragAndDropHandler += OnDragAndDrop;
+		}
+
+		public void OnTextChanged(object sender, EventArgs args)
+		{
+			GeneratedHeader.Value = InputCode.Value;
+			GeneratedBody.Value = InputCode.Value;
+		}
+
+		public void OnDragAndDrop(object sender, DragAndDropView.DragAndDropEventArgs args)
+		{
+			InputCode.Value = GeneratedHeader.Value = GeneratedBody.Value = args.Text;
 		}
 
 		public override NSObject RepresentedObject

@@ -13,6 +13,18 @@ namespace CSharpCpp
 	partial class ViewController
 	{
 		[Outlet]
+		CSharpCpp.DragAndDropView DragAndDropArea { get; set; }
+
+		[Outlet]
+		AppKit.NSTextView GeneratedBody { get; set; }
+
+		[Outlet]
+		AppKit.NSTextView GeneratedHeader { get; set; }
+
+		[Outlet]
+		AppKit.NSTextView InputCode { get; set; }
+
+		[Outlet]
 		AppKit.NSTextField LabelAboveGeneratedBody { get; set; }
 
 		[Outlet]
@@ -23,9 +35,29 @@ namespace CSharpCpp
 		
 		void ReleaseDesignerOutlets ()
 		{
-			if (LabelAboveInputCode != null) {
-				LabelAboveInputCode.Dispose ();
-				LabelAboveInputCode = null;
+			if (DragAndDropArea != null) {
+				DragAndDropArea.Dispose ();
+				DragAndDropArea = null;
+			}
+
+			if (GeneratedBody != null) {
+				GeneratedBody.Dispose ();
+				GeneratedBody = null;
+			}
+
+			if (GeneratedHeader != null) {
+				GeneratedHeader.Dispose ();
+				GeneratedHeader = null;
+			}
+
+			if (InputCode != null) {
+				InputCode.Dispose ();
+				InputCode = null;
+			}
+
+			if (LabelAboveGeneratedBody != null) {
+				LabelAboveGeneratedBody.Dispose ();
+				LabelAboveGeneratedBody = null;
 			}
 
 			if (LabelAboveGeneratedHeader != null) {
@@ -33,9 +65,9 @@ namespace CSharpCpp
 				LabelAboveGeneratedHeader = null;
 			}
 
-			if (LabelAboveGeneratedBody != null) {
-				LabelAboveGeneratedBody.Dispose ();
-				LabelAboveGeneratedBody = null;
+			if (LabelAboveInputCode != null) {
+				LabelAboveInputCode.Dispose ();
+				LabelAboveInputCode = null;
 			}
 		}
 	}

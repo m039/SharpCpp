@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
     <dependencies>
-        <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11762"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
         <capability name="stacking Non-gravity area distributions on NSStackView" minToolsVersion="7.0" minSystemVersion="10.11"/>
@@ -672,17 +671,17 @@
             <objects>
                 <viewController title="Transpiler Sandbox" id="XfG-lQ-9wD" customClass="ViewController" sceneMemberID="viewController">
                     <view key="view" id="m2S-Jp-Qdl">
-                        <rect key="frame" x="0.0" y="0.0" width="564" height="270"/>
+                        <rect key="frame" x="0.0" y="0.0" width="892" height="459"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <stackView distribution="fillEqually" orientation="horizontal" alignment="top" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NqW-RZ-U4X">
-                                <rect key="frame" x="20" y="20" width="524" height="230"/>
+                                <rect key="frame" x="20" y="20" width="852" height="419"/>
                                 <subviews>
                                     <stackView distribution="fill" orientation="vertical" alignment="leading" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3Xa-AY-J3G">
-                                        <rect key="frame" x="0.0" y="0.0" width="169.5" height="230"/>
+                                        <rect key="frame" x="0.0" y="189" width="278.5" height="230"/>
                                         <subviews>
                                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="b9C-hX-Bis">
-                                                <rect key="frame" x="-2" y="213" width="173.5" height="17"/>
+                                                <rect key="frame" x="-2" y="213" width="282.5" height="17"/>
                                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" id="Qrr-SH-OgR">
                                                     <font key="font" metaFont="system"/>
                                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -695,7 +694,7 @@
                                                     <rect key="frame" x="1" y="1" width="167.5" height="203"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
-                                                        <textView importsGraphics="NO" usesFontPanel="YES" findStyle="panel" continuousSpellChecking="YES" allowsUndo="YES" usesRuler="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" dashSubstitution="YES" smartInsertDelete="YES" id="kQr-kT-zaj">
+                                                        <textView importsGraphics="NO" usesFontPanel="YES" findStyle="panel" continuousSpellChecking="YES" allowsUndo="YES" usesRuler="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" dashSubstitution="YES" smartInsertDelete="YES" id="kQr-kT-zaj" customClass="EditTextView">
                                                             <rect key="frame" x="0.0" y="0.0" width="167.5" height="203"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -730,10 +729,10 @@
                                         </customSpacing>
                                     </stackView>
                                     <stackView distribution="fill" orientation="vertical" alignment="leading" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BwI-o6-jaG">
-                                        <rect key="frame" x="177.5" y="0.0" width="169" height="230"/>
+                                        <rect key="frame" x="286.5" y="189" width="279" height="230"/>
                                         <subviews>
                                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EQo-d9-bli">
-                                                <rect key="frame" x="-2" y="213" width="173" height="17"/>
+                                                <rect key="frame" x="-2" y="213" width="283" height="17"/>
                                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" placeholderString="" id="wzv-GH-rPx">
                                                     <font key="font" metaFont="system"/>
                                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -746,7 +745,7 @@
                                                     <rect key="frame" x="1" y="1" width="167" height="203"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
-                                                        <textView importsGraphics="NO" usesFontPanel="YES" findStyle="panel" continuousSpellChecking="YES" allowsUndo="YES" usesRuler="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" dashSubstitution="YES" smartInsertDelete="YES" id="EWK-vo-GQS">
+                                                        <textView importsGraphics="NO" usesFontPanel="YES" findStyle="panel" continuousSpellChecking="YES" allowsUndo="YES" usesRuler="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" dashSubstitution="YES" smartInsertDelete="YES" id="EWK-vo-GQS" customClass="EditTextView">
                                                             <rect key="frame" x="0.0" y="1" width="167" height="203"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -781,10 +780,10 @@
                                         </customSpacing>
                                     </stackView>
                                     <stackView distribution="fill" orientation="vertical" alignment="leading" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="C9J-nG-lRg">
-                                        <rect key="frame" x="354.5" y="0.0" width="169.5" height="230"/>
+                                        <rect key="frame" x="573.5" y="189" width="278.5" height="230"/>
                                         <subviews>
                                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wtr-Ea-gO7">
-                                                <rect key="frame" x="-2" y="213" width="173.5" height="17"/>
+                                                <rect key="frame" x="-2" y="213" width="282.5" height="17"/>
                                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" id="35G-17-cbk">
                                                     <font key="font" metaFont="system"/>
                                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -797,7 +796,7 @@
                                                     <rect key="frame" x="1" y="1" width="167.5" height="203"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
-                                                        <textView importsGraphics="NO" usesFontPanel="YES" findStyle="panel" continuousSpellChecking="YES" allowsUndo="YES" usesRuler="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" dashSubstitution="YES" smartInsertDelete="YES" id="0wm-Yr-Wnq">
+                                                        <textView importsGraphics="NO" usesFontPanel="YES" findStyle="panel" continuousSpellChecking="YES" allowsUndo="YES" usesRuler="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" dashSubstitution="YES" smartInsertDelete="YES" id="0wm-Yr-Wnq" customClass="EditTextView">
                                                             <rect key="frame" x="0.0" y="1" width="167.5" height="203"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -843,15 +842,27 @@
                                     <real value="3.4028234663852886e+38"/>
                                 </customSpacing>
                             </stackView>
+                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="w6x-WP-ceC" customClass="DragAndDropView">
+                                <rect key="frame" x="0.0" y="0.0" width="892" height="459"/>
+                            </customView>
                         </subviews>
                         <constraints>
+                            <constraint firstItem="w6x-WP-ceC" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" id="0X8-8t-49A"/>
                             <constraint firstAttribute="trailing" secondItem="NqW-RZ-U4X" secondAttribute="trailing" constant="20" symbolic="YES" id="LVw-Ez-BoI"/>
                             <constraint firstAttribute="bottom" secondItem="NqW-RZ-U4X" secondAttribute="bottom" constant="20" symbolic="YES" id="Nav-MT-cN3"/>
                             <constraint firstItem="NqW-RZ-U4X" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="20" symbolic="YES" id="Tqu-xN-pP1"/>
+                            <constraint firstAttribute="trailing" secondItem="w6x-WP-ceC" secondAttribute="trailing" id="b40-2x-R3F"/>
                             <constraint firstItem="NqW-RZ-U4X" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" constant="20" symbolic="YES" id="fdG-Oz-dGI"/>
+                            <constraint firstAttribute="bottom" secondItem="w6x-WP-ceC" secondAttribute="bottom" id="kYm-BO-GWy"/>
+                            <constraint firstItem="w6x-WP-ceC" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" id="wFi-mN-Elb"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="DragAnDropView" destination="w6x-WP-ceC" id="G22-xV-quU"/>
+                        <outlet property="DragAndDropArea" destination="w6x-WP-ceC" id="OAF-XG-PaY"/>
+                        <outlet property="GeneratedBody" destination="0wm-Yr-Wnq" id="pgM-nW-F1H"/>
+                        <outlet property="GeneratedHeader" destination="EWK-vo-GQS" id="qI2-Cm-V8B"/>
+                        <outlet property="InputCode" destination="kQr-kT-zaj" id="gxO-iU-qQc"/>
                         <outlet property="LabelAboveGeneratedBody" destination="Wtr-Ea-gO7" id="sjc-0e-fNy"/>
                         <outlet property="LabelAboveGeneratedHeader" destination="EQo-d9-bli" id="flj-9o-qXp"/>
                         <outlet property="LabelAboveInputCode" destination="b9C-hX-Bis" id="Qoa-gh-fWy"/>
@@ -859,7 +870,7 @@
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="117" y="655"/>
+            <point key="canvasLocation" x="281" y="749.5"/>
         </scene>
     </scenes>
 </document>
