@@ -1,18 +1,16 @@
-﻿using Gtk;
-using System;
+﻿using System;
+using Gtk;
 
-class Hello
+namespace Hello
 {
-
-	static void Main()
+	class MainClass
 	{
-		Application.Init();
-
-		Window window = new Window("helloworld");
-		window.Resize(800, 800);
-		window.Show();
-
-		Application.Run();
-
+		public static void Main(string[] args)
+		{
+			Application.Init();
+			MainWindow win = new MainWindow();
+			win.Show();
+			Application.Run();
+		}
 	}
 }
