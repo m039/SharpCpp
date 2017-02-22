@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Microsoft.CodeAnalysis.CSharp;
+using CppLang;
 
 namespace CSharpCpp
 {
@@ -9,7 +10,7 @@ namespace CSharpCpp
 	{
 		private const string Separator = ":";
 
-		private readonly Dictionary<string, CppGenerationUnit> _generationUnits = new Dictionary<string, CppGenerationUnit>();
+		private readonly Dictionary<string, GenerationUnit> _generationUnits = new Dictionary<string, GenerationUnit>();
 
 		private class WalkerState
 		{
@@ -56,7 +57,7 @@ namespace CSharpCpp
 
 			if (!_generationUnits.ContainsKey(classFullName))
 			{
-				var generationUnit = new CppGenerationUnit(_walkerState.currentNamespace, className);;
+				var generationUnit = new GenerationUnit(_walkerState.currentNamespace, className);;
 				_generationUnits[classFullName] = generationUnit;
 				generationUnit.IsInterface = isInterface;
 			}

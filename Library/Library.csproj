@@ -101,13 +101,21 @@
     <Compile Include="TFile.cs" />
     <Compile Include="TException.cs" />
     <Compile Include="TSyntaxWalker.cs" />
-    <Compile Include="CppLang\CppGenerationUnit.cs" />
+    <Compile Include="CppLang\GenerationUnit.cs" />
+    <Compile Include="CppLang\SourceCompiler.cs" />
+    <Compile Include="CppLang\UnitCompiler.cs" />
+    <Compile Include="CppLang\HeaderUnitCompiler.cs" />
+    <Compile Include="Prettifier.cs" />
+    <Compile Include="FileUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="CppLang\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Configs\uncrustify.cfg" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

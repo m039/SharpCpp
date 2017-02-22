@@ -19,7 +19,19 @@ namespace CSharpCpp
 
 			walker.Visit(CSharpSyntaxTree.ParseText(code).GetRoot());
 
-			return walker.GetGeneratedFiles();
+			return Prettify(walker.GetGeneratedFiles());
+		}
+
+		private static TFile[] Prettify(TFile[] generatedFiles)
+		{
+			var prettifier = new Prettifier();
+
+			foreach (var file in generatedFiles)
+			{
+				prettifier.Prettify(file);
+			}
+
+			return generatedFiles;
 		}
 	}
 }

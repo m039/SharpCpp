@@ -1,7 +1,9 @@
 ﻿using System;
-namespace CSharpCpp
+using CSharpCpp;
+
+namespace CppLang
 {
-	public class CppGenerationUnit
+	public class GenerationUnit
 	{
 		public string Name;
 
@@ -14,7 +16,7 @@ namespace CSharpCpp
 		private readonly TFile _source;
 
 		// Note: namespace may be null
-		public CppGenerationUnit(string @namespace, string name)
+		public GenerationUnit(string @namespace, string name)
 		{
 			Name = name;
 
@@ -43,8 +45,8 @@ namespace CSharpCpp
 
 		public void Compile()
 		{
-			_header.Content = "header class " + Name + " " + IsInterface;
-			_source.Content = "source class " + Name + " " + IsInterface;
+			_header.Content = new HeaderUnitCompiler().Compile(this);
+			_source.Content = new SourceUnitCompiler().Compile(this);
 		}
 	}
 }
