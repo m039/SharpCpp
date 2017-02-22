@@ -5,83 +5,74 @@ using Foundation;
 
 namespace CSharpCpp
 {
-	public partial class ViewController : NSViewController
-	{
-		
-		public ViewController(IntPtr handle) : base(handle)
-		{
-		}
+    public partial class ViewController : NSViewController
+    {
 
-		public override void ViewDidLoad()
-		{
-			base.ViewDidLoad();
+        public ViewController(IntPtr handle) : base(handle)
+        {
+        }
 
-			// Do any additional setup after loading the view.
+        public override void ViewDidLoad()
+        {
+            base.ViewDidLoad();
 
-			LabelAboveInputCode.StringValue = "C# goes here";
-			InputCode.TextDidChange += OnTextChanged;
-			DragAndDropArea.DragAndDropHandler += OnDragAndDrop;
+            // Do any additional setup after loading the view.
 
-			InputCode.Value = TestData.InputCode1;
-			UpdateTextFields(TestData.InputCode1);
-		}
+            LabelAboveInputCode.StringValue = "C# goes here";
+            InputCode.TextDidChange += OnTextChanged;
+            DragAndDropArea.DragAndDropHandler += OnDragAndDrop;
 
-		public void OnTextChanged(object sender, EventArgs args)
-		{
-			UpdateTextFields(InputCode.Value);
-		}
+            InputCode.Value = TestData.InputCode1;
+            UpdateTextFields(TestData.InputCode1);
+        }
 
-		public void OnDragAndDrop(object sender, DragAndDropView.DragAndDropEventArgs args)
-		{
-			InputCode.Value = args.Text;
-			UpdateTextFields(args.Text);
-		}
+        public void OnTextChanged(object sender, EventArgs args)
+        {
+            UpdateTextFields(InputCode.Value);
+        }
 
-		private void UpdateTextFields(string inputCode)
-		{
-			GeneratedHeader.Value = GeneratedBody.Value = "";
+        public void OnDragAndDrop(object sender, DragAndDropView.DragAndDropEventArgs args)
+        {
+            InputCode.Value = args.Text;
+            UpdateTextFields(args.Text);
+        }
 
-			try
-			{
-				var files = Transpiler.compileCSharpToCpp(inputCode);
-				if (files.Length > 2)
-				{
-					throw new Exception("Unsupported");
-				}
+        private void UpdateTextFields(string inputCode)
+        {
+            GeneratedHeader.Value = GeneratedBody.Value = "";
 
-				foreach (var file in files)
-				{
-					switch (file.Type)
-					{
-						case TFile.TFileType.SOURCE:
-							GeneratedBody.Value = file.Content;
-							LabelAboveGeneratedBody.StringValue = file.ToString();
-							break;
-						case TFile.TFileType.HEADER:
-							GeneratedHeader.Value = file.Content;
-							LabelAboveGeneratedHeader.StringValue = file.ToString();
-							break;
-					}
-				}
+            try {
+                var files = Transpiler.compileCSharpToCpp(inputCode);
+                if (files.Length > 2) {
+                    throw new Exception("Unsupported");
+                }
 
-			}
-			catch (TException)
-			{
-				GeneratedHeader.Value = GeneratedBody.Value = "";
-			}
-		}
+                foreach (var file in files) {
+                    switch (file.Type) {
+                        case TFile.TFileType.SOURCE:
+                            GeneratedBody.Value = file.Content;
+                            LabelAboveGeneratedBody.StringValue = file.ToString();
+                            break;
+                        case TFile.TFileType.HEADER:
+                            GeneratedHeader.Value = file.Content;
+                            LabelAboveGeneratedHeader.StringValue = file.ToString();
+                            break;
+                    }
+                }
 
-		public override NSObject RepresentedObject
-		{
-			get
-			{
-				return base.RepresentedObject;
-			}
-			set
-			{
-				base.RepresentedObject = value;
-				// Update the view, if already loaded.
-			}
-		}
-	}
+            } catch (TException) {
+                GeneratedHeader.Value = GeneratedBody.Value = "";
+            }
+        }
+
+        public override NSObject RepresentedObject {
+            get {
+                return base.RepresentedObject;
+            }
+            set {
+                base.RepresentedObject = value;
+                // Update the view, if already loaded.
+            }
+        }
+    }
 }

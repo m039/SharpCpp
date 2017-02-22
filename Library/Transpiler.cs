@@ -6,32 +6,30 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace CSharpCpp
 {
-	public static class Transpiler
-	{
-		public static TFile[] compileCSharpToCpp(string code)
-		{
-			if (code == null || "".Equals(code))
-			{
-				throw new TException("What are you doing!?");
-			}
+    public static class Transpiler
+    {
+        public static TFile[] compileCSharpToCpp(string code)
+        {
+            if (code == null || "".Equals(code)) {
+                throw new TException("What are you doing!?");
+            }
 
-			var walker = new TSyntaxWalker();
+            var walker = new TSyntaxWalker();
 
-			walker.Visit(CSharpSyntaxTree.ParseText(code).GetRoot());
+            walker.Visit(CSharpSyntaxTree.ParseText(code).GetRoot());
 
-			return Prettify(walker.GetGeneratedFiles());
-		}
+            return Prettify(walker.GetGeneratedFiles());
+        }
 
-		private static TFile[] Prettify(TFile[] generatedFiles)
-		{
-			var prettifier = new Prettifier();
+        private static TFile[] Prettify(TFile[] generatedFiles)
+        {
+            var prettifier = new Prettifier();
 
-			foreach (var file in generatedFiles)
-			{
-				prettifier.Prettify(file);
-			}
+            foreach (var file in generatedFiles) {
+                prettifier.Prettify(file);
+            }
 
-			return generatedFiles;
-		}
-	}
+            return generatedFiles;
+        }
+    }
 }

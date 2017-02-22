@@ -3,50 +3,48 @@ using CSharpCpp;
 
 namespace CppLang
 {
-	public class GenerationUnit
-	{
-		public string Name;
+    public class GenerationUnit
+    {
+        public string Name;
 
-		public readonly string Namespace;
+        public readonly string Namespace;
 
-		public bool IsInterface { get; set; } = false;
+        public bool IsInterface { get; set; } = false;
 
-		private readonly TFile _header;
+        private readonly TFile _header;
 
-		private readonly TFile _source;
+        private readonly TFile _source;
 
-		// Note: namespace may be null
-		public GenerationUnit(string @namespace, string name)
-		{
-			Name = name;
+        // Note: namespace may be null
+        public GenerationUnit(string @namespace, string name)
+        {
+            Name = name;
 
-			_header = new TFile
-			{
-				Name = name,
-				Type = TFile.TFileType.HEADER
-			};
+            _header = new TFile {
+                Name = name,
+                Type = TFile.TFileType.HEADER
+            };
 
-			_source = new TFile
-			{
-				Name = name,
-				Type = TFile.TFileType.SOURCE
-			};
-		}
+            _source = new TFile {
+                Name = name,
+                Type = TFile.TFileType.SOURCE
+            };
+        }
 
-		public TFile GeneratedSourceFile()
-		{
-			return _source;
-		}
+        public TFile GeneratedSourceFile()
+        {
+            return _source;
+        }
 
-		public TFile GeneratedHeaderFile()
-		{
-			return _header;
-		}
+        public TFile GeneratedHeaderFile()
+        {
+            return _header;
+        }
 
-		public void Compile()
-		{
-			_header.Content = new HeaderUnitCompiler().Compile(this);
-			_source.Content = new SourceUnitCompiler().Compile(this);
-		}
-	}
+        public void Compile()
+        {
+            _header.Content = new HeaderUnitCompiler().Compile(this);
+            _source.Content = new SourceUnitCompiler().Compile(this);
+        }
+    }
 }
