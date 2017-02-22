@@ -12,7 +12,7 @@ namespace CSharpCpp
         /// </summary>
         private static readonly string[] PATH = new[] {
             "/usr/local/bin" // For MacOS
-		};
+        };
 
         /// <summary>
         /// Finds command in the PATH environment variable or throws FileNotFoundException.
