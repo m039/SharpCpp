@@ -3,9 +3,11 @@ namespace CSharpCpp
 {
 	public class CppGenerationUnit
 	{
-		public CppNamespace CppNamespace;
-
 		public string Name;
+
+		public readonly string Namespace;
+
+		public bool IsInterface { get; set; } = false;
 
 		private readonly TFile _header;
 
@@ -14,11 +16,6 @@ namespace CSharpCpp
 		// Note: namespace may be null
 		public CppGenerationUnit(string @namespace, string name)
 		{
-			CppNamespace = new CppNamespace
-			{
-				Value = @namespace
-			};
-
 			Name = name;
 
 			_header = new TFile
@@ -46,8 +43,8 @@ namespace CSharpCpp
 
 		public void Compile()
 		{
-			_header.Content = "header class " + Name;
-			_source.Content = "source class " + Name;
+			_header.Content = "header class " + Name + " " + IsInterface;
+			_source.Content = "source class " + Name + " " + IsInterface;
 		}
 	}
 }

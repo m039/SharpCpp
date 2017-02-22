@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Foundation;
 using AppKit;
-using MobileCoreServices;
-using ObjCRuntime;
 
 namespace CSharpCpp
 {
@@ -79,7 +76,7 @@ namespace CSharpCpp
 		private static NSUrl GetFilePathUrl(NSDraggingInfo sender)
 		{
 			var pasteboard = sender.DraggingPasteboard;
-			var classes = new[] { new Class(typeof(NSUrl)) };
+			var classes = new[] { new ObjCRuntime.Class(typeof(NSUrl)) };
 			if (pasteboard.CanReadObjectForClasses(classes, null))
 			{
 				var urls = pasteboard.ReadObjectsForClasses(classes, null) as NSObject[];

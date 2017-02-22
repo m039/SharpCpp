@@ -38,18 +38,27 @@ namespace CSharpCpp
 		{
 			base.VisitClassDeclaration(node);
 
-			CreateGenerationUnitsIfNotExist(node.Identifier.ToString());
+			CreateGenerationUnitsIfNotExist(node.Identifier.ToString(), false);
+		}
+
+		public override void VisitInterfaceDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.InterfaceDeclarationSyntax node)
+		{
+			base.VisitInterfaceDeclaration(node);
+
+			CreateGenerationUnitsIfNotExist(node.Identifier.ToString(), true);
 		}
 
 		#endregion
 
-		private void CreateGenerationUnitsIfNotExist(string className)
+		private void CreateGenerationUnitsIfNotExist(string className, bool isInterface)
 		{
 			var classFullName = GetClassFullName(_walkerState, className);
 
 			if (!_generationUnits.ContainsKey(classFullName))
 			{
-				_generationUnits[classFullName] = new CppGenerationUnit(_walkerState.currentNamespace, className); 
+				var generationUnit = new CppGenerationUnit(_walkerState.currentNamespace, className);;
+				_generationUnits[classFullName] = generationUnit;
+				generationUnit.IsInterface = isInterface;
 			}
 		}
 

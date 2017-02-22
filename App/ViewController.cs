@@ -8,7 +8,6 @@ namespace CSharpCpp
 	public partial class ViewController : NSViewController
 	{
 		
-
 		public ViewController(IntPtr handle) : base(handle)
 		{
 		}
