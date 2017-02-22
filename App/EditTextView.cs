@@ -6,6 +6,10 @@ using AppKit;
 
 namespace CSharpCpp
 {
+	/// <summary>
+	/// This class only disables Drag and Drop functionlity to prevent clashes
+	/// with DragAndDropView. But sometimes these hacks don't work, I don't know why.
+	/// </summary>
 	public partial class EditTextView : AppKit.NSTextView
 	{
 		#region Constructors
@@ -28,14 +32,15 @@ namespace CSharpCpp
 		{
 		}
 
+		#endregion
+
+#if true
 		public override void AwakeFromNib()
 		{
 			base.AwakeFromNib();
 
 			UnregisterDraggedTypes();
 		}
-
-		#endregion
 
 		public override string[] RegisteredDragTypes()
 		{
@@ -51,5 +56,6 @@ namespace CSharpCpp
 		{
 			return NSDragOperation.Copy;
 		}
+#endif
 	}
 }
