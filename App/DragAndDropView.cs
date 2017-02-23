@@ -3,7 +3,7 @@ using System.Linq;
 using Foundation;
 using AppKit;
 
-namespace CSharpCpp
+namespace SharpCpp
 {
     public partial class DragAndDropView : AppKit.NSView
     {

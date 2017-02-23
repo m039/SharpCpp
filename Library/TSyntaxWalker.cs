@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Microsoft.CodeAnalysis.CSharp;
 using CppLang;
 
-namespace CSharpCpp
+namespace SharpCpp
 {
     public class TSyntaxWalker : CSharpSyntaxWalker
     {

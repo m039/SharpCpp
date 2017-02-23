@@ -4,7 +4,7 @@ using System.Linq;
 using Foundation;
 using AppKit;
 
-namespace CSharpCpp
+namespace SharpCpp
 {
     /// <summary>
     /// This class only disables Drag and Drop functionlity to prevent clashes

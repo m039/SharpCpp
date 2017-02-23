@@ -1,5 +1,5 @@
 ﻿using System;
-using CSharpCpp;
+using SharpCpp;
 
 namespace CppLang
 {
@@ -19,6 +19,7 @@ namespace CppLang
         public GenerationUnit(string @namespace, string name)
         {
             Name = name;
+            Namespace = @namespace;
 
             _header = new TFile {
                 Name = name,

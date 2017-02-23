@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{7E1DC510-5382-44F6-BD2F-5BAEDCF7D40C}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>CSharpCpp</RootNamespace>
+    <RootNamespace>SharpCpp</RootNamespace>
     <AssemblyName>Library</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
@@ -62,6 +62,7 @@
     <Compile Include="CppLang\HeaderUnitCompiler.cs" />
     <Compile Include="Prettifier.cs" />
     <Compile Include="FileUtils.cs" />
+    <Compile Include="TFatalException.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

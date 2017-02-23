@@ -1,4 +1,4 @@
-﻿namespace CSharpCpp
+﻿namespace SharpCpp
 {
 
 	// Should subclass AppKit.NSView

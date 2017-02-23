@@ -3,7 +3,7 @@
 using AppKit;
 using Foundation;
 
-namespace CSharpCpp
+namespace SharpCpp
 {
     public partial class ViewController : NSViewController
     {

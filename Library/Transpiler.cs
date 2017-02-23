@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace CSharpCpp
+namespace SharpCpp
 {
     public static class Transpiler
     {
@@ -23,13 +23,13 @@ namespace CSharpCpp
 
         private static TFile[] Prettify(TFile[] generatedFiles)
         {
-            var prettifier = new Prettifier();
+            using (var prettifier = new Prettifier()) {
+                foreach (var file in generatedFiles) {
+                    prettifier.Prettify(file);
+                }
 
-            foreach (var file in generatedFiles) {
-                prettifier.Prettify(file);
+                return generatedFiles;
             }
-
-            return generatedFiles;
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using System;
-namespace CSharpCpp
+namespace SharpCpp
 {
     public class TFile
     {

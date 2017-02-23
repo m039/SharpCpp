@@ -3,35 +3,42 @@ using System.IO;
 using System.Diagnostics;
 using System.Reflection;
 
-namespace CSharpCpp
+namespace SharpCpp
 {
-    public class Prettifier
+    public class Prettifier : IDisposable
     {
         private const string UncrustifyCommandName = "uncrustify";
 
-        private const string UncrustifyConfigId = "CSharpCpp.Configs.uncrustify.cfg";
+        private const string UncrustifyConfigId = "SharpCpp.Configs.uncrustify.cfg";
 
         private readonly string _uncrustifyFileName;
 
         private readonly string _uncrustifyConfigFileName;
+
+        private bool _disposed = false;
 
         public Prettifier()
         {
             try {
                 _uncrustifyFileName = FileUtils.FindExecutable(UncrustifyCommandName);
             } catch (FileNotFoundException) {
-                throw new FileNotFoundException(string.Format("Can't find '{0}' in system", UncrustifyCommandName));
+                throw new TFatalException(string.Format("Can't find '{0}' in system", UncrustifyCommandName));
             }
 
             _uncrustifyConfigFileName = FileUtils.CopyResourceToTmpFolder(UncrustifyConfigId);
+        }
 
-            // TODO move this code when application starts
-            // TODO add cleanup after application exited
-            // Note: cleanup in destructor doesn't work with multiple threads.
+        public void Dispose()
+        {
+            File.Delete(_uncrustifyConfigFileName);
+            _disposed = true;
         }
 
         public void Prettify(TFile file)
         {
+            if (_disposed)
+                throw new TException("This object was disposed");
+
             using (var process = new Process {
                 StartInfo = new ProcessStartInfo {
                     FileName = _uncrustifyFileName,

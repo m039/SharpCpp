@@ -7,13 +7,13 @@
 using Foundation;
 using System.CodeDom.Compiler;
 
-namespace CSharpCpp
+namespace SharpCpp
 {
 	[Register ("ViewController")]
 	partial class ViewController
 	{
 		[Outlet]
-		CSharpCpp.DragAndDropView DragAndDropArea { get; set; }
+		SharpCpp.DragAndDropView DragAndDropArea { get; set; }
 
 		[Outlet]
 		AppKit.NSTextView GeneratedBody { get; set; }

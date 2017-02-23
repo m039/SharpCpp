@@ -1,7 +1,7 @@
 ﻿using AppKit;
 using Foundation;
 
-namespace CSharpCpp
+namespace SharpCpp
 {
     [Register("AppDelegate")]
     public class AppDelegate : NSApplicationDelegate

@@ -1,6 +1,6 @@
 ﻿using AppKit;
 
-namespace CSharpCpp
+namespace SharpCpp
 {
     static class MainClass
     {
