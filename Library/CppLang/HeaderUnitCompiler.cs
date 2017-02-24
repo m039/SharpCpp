@@ -9,12 +9,12 @@ namespace SharpCpp
     {
         class HeaderWalker : YSyntaxWalker
         {
-            readonly StringBuilder builder  = new StringBuilder();
+            readonly StringBuilder _builder  = new StringBuilder();
 
             // true if needed closed bracket
-            List<YSymbol> _nestedLevels = new List<YSymbol>();
+            readonly List<YSymbol> _nestedLevels = new List<YSymbol>();
 
-            HashSet<string> _includes = new HashSet<string>();
+            readonly HashSet<string> _includes = new HashSet<string>();
 
             const string PublicMark = "{{public}}";
 
@@ -24,14 +24,14 @@ namespace SharpCpp
 
             public HeaderWalker()
             {
-                builder.Append("#pragma once\n");
-                builder.AppendLine();
-                builder.Append(IncludesMark);
+                _builder.Append("#pragma once\n");
+                _builder.AppendLine();
+                _builder.Append(IncludesMark);
             }
 
             protected override void Visit(YNamespace @namespace)
             {
-                builder.Append("namespace " + @namespace.Name + "{");
+                _builder.Append("namespace " + @namespace.Name + "{");
                 _nestedLevels.Add(@namespace);
             }
 
@@ -51,17 +51,17 @@ namespace SharpCpp
                     }
                 }
 
-                builder.Append("class " + @class.Name + "{");
+                _builder.Append("class " + @class.Name + "{");
 
                 _publicFields.Clear();
                 _privateFields.Clear();
 
                 if (@class.HasPrivateFields()) {
-                    builder.Append(PrivateMark);
+                    _builder.Append(PrivateMark);
                 }
 
                 if (@class.HasPublicFields()) {
-                    builder.Append(PublicMark);
+                    _builder.Append(PublicMark);
                 }
 
                 _nestedLevels.Add(@class);
@@ -90,7 +90,7 @@ namespace SharpCpp
 
                 if (field.Value != null) {
                     if (field.Value is YConstExpr) {
-                        b.Append("= " + field.Value);
+                        b.Append("=" + field.Value);
                     } else {
                         throw new TException("Unsupported expr");
                     }
@@ -103,7 +103,7 @@ namespace SharpCpp
             {
                 CloseBrackets();
 
-                return builder.ToString();
+                return _builder.ToString();
             }
 
             void CloseBrackets()
@@ -113,7 +113,7 @@ namespace SharpCpp
                     if (l is YClass) {
                         CloseClass();
                     } else if (l is YNamespace) {
-                        builder.Append("}");
+                        _builder.Append("}");
                     } else {
                         throw new TException("Unsupported nesting");
                     }
@@ -130,23 +130,23 @@ namespace SharpCpp
                     sb.AppendLine();
                 }
 
-                builder.Replace(IncludesMark, sb.ToString());
+                _builder.Replace(IncludesMark, sb.ToString());
             }
 
             private void CloseClass()
             {
-                builder.Append("};");
+                _builder.Append("};");
 
-                if (_publicFields.Length > 0) {
-                    builder.Replace(PrivateMark, "private:\n" + _privateFields);
+                if (_privateFields.Length > 0) {
+                    _builder.Replace(PrivateMark, "private:\n" + _privateFields);
                 } else {
-                    builder.Replace(PrivateMark, "");
+                    _builder.Replace(PrivateMark, "");
                 }
 
                 if (_publicFields.Length > 0) {
-                    builder.Replace(PublicMark, "public:\n" + _publicFields);
+                    _builder.Replace(PublicMark, "public:\n" + _publicFields);
                 } else {
-                    builder.Replace(PublicMark, "");
+                    _builder.Replace(PublicMark, "");
                 }
             }
         }

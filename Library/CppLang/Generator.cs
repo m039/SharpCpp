@@ -24,10 +24,17 @@ namespace SharpCpp
                 // Classes
 
                 foreach (var inputClass in inputNamespace.ChildNodes().OfType<ClassDeclarationSyntax>()) {
-                    var @class = new YClass(inputClass.Identifier.ToString());
+                    var className = inputClass.Identifier.ToString();
+                    if (className == "")
+                        continue;
+
+                    var @class = new YClass(className);
                     root.AddChild(@class);
 
-                    _generationUnits.Add(new GenerationUnit(@class));
+                    // todo bug with multiple generation units
+                    if (_generationUnits.Count <= 0) {
+                        _generationUnits.Add(new GenerationUnit(@class));
+                    }
 
                     // Fields
 

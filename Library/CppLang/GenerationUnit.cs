@@ -5,8 +5,6 @@ namespace SharpCpp
 {
     public class GenerationUnit
     {
-        public bool IsInterface { get; set; } = false;
-
         readonly YClass Class;
 
         readonly TFile _header;
