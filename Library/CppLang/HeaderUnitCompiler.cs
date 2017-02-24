@@ -33,7 +33,9 @@ namespace SharpCpp
             {
                 builder.Append("namespace " + @namespace.Name + "{");
                 _nestedLevels.Add(@namespace);
-            }   
+            }
+
+            // todo aggregate builders as class builders
 
             public StringBuilder _publicFields = new StringBuilder();
 

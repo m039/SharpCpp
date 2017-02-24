@@ -16,11 +16,13 @@ namespace SharpCpp
             YRoot root = new YRoot();
 
             // Namespaces
+
             foreach (var inputNamespace in input.ChildNodes().OfType<NamespaceDeclarationSyntax>()) {
                 var @namespace = new YNamespace(inputNamespace.Name.ToString());
                 root.AddChild(@namespace);
 
                 // Classes
+
                 foreach (var inputClass in inputNamespace.ChildNodes().OfType<ClassDeclarationSyntax>()) {
                     var @class = new YClass(inputClass.Identifier.ToString());
                     root.AddChild(@class);
@@ -28,6 +30,7 @@ namespace SharpCpp
                     _generationUnits.Add(new GenerationUnit(@class));
 
                     // Fields
+
                     foreach (var inputField in inputClass.ChildNodes().OfType<FieldDeclarationSyntax>()) {
                         var modifiers = inputField.Modifiers;
                         var declaration = inputField.Declaration;
@@ -39,13 +42,29 @@ namespace SharpCpp
                             var predefinedType = (PredefinedTypeSyntax)declarationType;
 
                             if (predefinedType.Keyword.IsKind(SyntaxKind.IntKeyword)) {
+                                var variable = variables[0];
+
                                 var field = new YField() {
                                     Type = YType.Int,
-                                    Name = variables[0].Identifier.ToString()
+                                    Name = variable.Identifier.ToString()
                                 };
+
+                                // modifiers: public, private
 
                                 if (modifiers.Any(SyntaxKind.PublicKeyword)) {
                                     field.Visibility = YVisibility.Public;
+                                }
+
+                                // expresions: literal
+
+                                // todo process negative numbers
+
+                                if (variable.Initializer?.Value is LiteralExpressionSyntax) {
+                                    var literalExperssion = (LiteralExpressionSyntax)variable.Initializer.Value;
+
+                                    if (literalExperssion.Token.Value is int) {
+                                        field.Value = new YConstExpr((int)literalExperssion.Token.Value);
+                                    }
                                 }
 
                                 @class.AddChild(field);

@@ -22,8 +22,8 @@ namespace SharpCpp
             InputCode.TextDidChange += OnTextChanged;
             DragAndDropArea.DragAndDropHandler += OnDragAndDrop;
 
-            InputCode.Value = TestData.InputCode1;
-            UpdateTextFields(TestData.InputCode1);
+            InputCode.Value = TestData.InputCode;
+            UpdateTextFields(TestData.InputCode);
         }
 
         public void OnTextChanged(object sender, EventArgs args)
