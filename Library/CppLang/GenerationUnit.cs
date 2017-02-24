@@ -1,61 +1,31 @@
 ﻿using System;
 using SharpCpp;
 
-namespace CppLang
+namespace SharpCpp
 {
     public class GenerationUnit
     {
-        public string Name;
-
-        public readonly string Namespace;
-
         public bool IsInterface { get; set; } = false;
 
-        private readonly TFile _header;
+        readonly YClass Class;
 
-        private readonly TFile _source;
+        readonly TFile _header;
 
-        internal YSyntaxNode Root;
+        readonly TFile _source;
 
-        // Note: namespace may be null
-        public GenerationUnit(string @namespace, string name)
+        public GenerationUnit(YClass @class)
         {
-            Name = name;
-            Namespace = @namespace;
+            Class = @class;
 
             _header = new TFile {
-                Name = name,
+                Name = Class.Name,
                 Type = TFile.TFileType.HEADER
             };
 
             _source = new TFile {
-                Name = name,
+                Name = Class.Name,
                 Type = TFile.TFileType.SOURCE
             };
-
-            // Create AST manually
-
-            Root = new YRoot();
-            var _namespaceNode = new YNamespace() {
-                Name = "CSharpFooBarLibrary"
-            };
-
-            var _classNode = new YClass() {
-                Name = "Foo"
-            };
-
-            var _fieldNode = new YField() {
-                Type = YType.Int,
-                Name = "number",
-                Value = new YConstExpr(1),
-                Visibility = YVisibility.Public
-            };
-
-            _classNode.AddChild(_fieldNode);
-            _namespaceNode.AddChild(_classNode);
-            _namespaceNode.AddChild(_classNode);
-
-            Root.AddChild(_namespaceNode);
         }
 
         public TFile GeneratedSourceFile()
@@ -68,10 +38,10 @@ namespace CppLang
             return _header;
         }
 
-        public void Compile()
+        public void Compile(YRoot root)
         {
-            _header.Content = new HeaderUnitCompiler().Compile(this);
-            _source.Content = new SourceUnitCompiler().Compile(this);
+            _header.Content = new HeaderUnitCompiler().Compile(root, this);
+            _source.Content = new SourceUnitCompiler().Compile(root, this);
         }
     }
 }

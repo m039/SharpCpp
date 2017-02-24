@@ -60,8 +60,9 @@ namespace SharpCpp
                     }
                 }
 
-            } catch (TException) {
+            } catch (TException e) {
                 GeneratedHeader.Value = GeneratedBody.Value = "";
+                Console.WriteLine(e);
             }
         }
 

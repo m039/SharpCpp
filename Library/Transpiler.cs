@@ -14,11 +14,7 @@ namespace SharpCpp
                 throw new TException("What are you doing!?");
             }
 
-            var walker = new TSyntaxWalker();
-
-            walker.Visit(CSharpSyntaxTree.ParseText(code).GetRoot());
-
-            return Prettify(walker.GetGeneratedFiles());
+            return Prettify(new Generator().Generate(CSharpSyntaxTree.ParseText(code).GetRoot()));
         }
 
         private static TFile[] Prettify(TFile[] generatedFiles)

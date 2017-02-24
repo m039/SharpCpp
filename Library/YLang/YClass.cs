@@ -6,6 +6,11 @@ namespace SharpCpp
         // hack: nested classes are not supported
         public bool IsNested = false;
 
+        public YClass(string name)
+        {
+            Name = name;
+        }
+
         public bool HasPublicFields()
         {
             // Note: not performance frendly, better to use AddChild

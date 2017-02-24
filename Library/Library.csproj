@@ -55,7 +55,6 @@
     <Compile Include="Transpiler.cs" />
     <Compile Include="TFile.cs" />
     <Compile Include="TException.cs" />
-    <Compile Include="TSyntaxWalker.cs" />
     <Compile Include="CppLang\GenerationUnit.cs" />
     <Compile Include="CppLang\SourceCompiler.cs" />
     <Compile Include="CppLang\UnitCompiler.cs" />
@@ -76,6 +75,7 @@
     <Compile Include="YLang\YSyntaxNode.cs" />
     <Compile Include="YLang\YRoot.cs" />
     <Compile Include="YLang\YSyntaxWalker.cs" />
+    <Compile Include="CppLang\Generator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

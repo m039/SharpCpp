@@ -1,5 +1,5 @@
 ﻿using System;
-namespace CppLang
+namespace SharpCpp
 {
     using System.Text;
     using SharpCpp;
@@ -134,16 +134,26 @@ namespace CppLang
             private void CloseClass()
             {
                 builder.Append("};");
-                builder.Replace(PrivateMark, "private:\n" + _privateFields);
-                builder.Replace(PublicMark, "public:\n" + _publicFields);
+
+                if (_publicFields.Length > 0) {
+                    builder.Replace(PrivateMark, "private:\n" + _privateFields);
+                } else {
+                    builder.Replace(PrivateMark, "");
+                }
+
+                if (_publicFields.Length > 0) {
+                    builder.Replace(PublicMark, "public:\n" + _publicFields);
+                } else {
+                    builder.Replace(PublicMark, "");
+                }
             }
         }
 
-        public override string Compile(GenerationUnit unit)
+        public override string Compile(YRoot root, GenerationUnit unit)
         {
             var walker = new HeaderWalker();
 
-            walker.Walk(unit.Root);
+            walker.Walk(root);
 
             return walker.GeneratedText();
         }

@@ -1,8 +1,10 @@
 ﻿using System;
-namespace CppLang
+using SharpCpp;
+
+namespace SharpCpp
 {
     public abstract class UnitCompiler
     {
-        public abstract string Compile(GenerationUnit unit);
+        public abstract string Compile(YRoot root, GenerationUnit unit);
     }
 }

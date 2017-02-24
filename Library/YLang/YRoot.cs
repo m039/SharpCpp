@@ -12,6 +12,11 @@ namespace SharpCpp
             _Namespaces.Add(node);
         }
 
+        public YNamespace FindNamespaceByName(string name)
+        {
+            return _Namespaces.Find((obj) => (obj as YNamespace)?.Name == name) as YNamespace;
+        }
+
         public IEnumerable<YSyntaxNode> Nodes {
             get {
                 return _Namespaces;
