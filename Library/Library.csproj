@@ -63,12 +63,28 @@
     <Compile Include="Prettifier.cs" />
     <Compile Include="FileUtils.cs" />
     <Compile Include="TFatalException.cs" />
+    <Compile Include="YLang\YSymbolTable.cs" />
+    <Compile Include="YLang\YVisibility.cs" />
+    <Compile Include="YLang\Expresions\YConstExpr.cs" />
+    <Compile Include="YLang\Expresions\YExpr.cs" />
+    <Compile Include="YLang\Types\YType.cs" />
+    <Compile Include="YLang\Types\YIntType.cs" />
+    <Compile Include="YLang\YNamespace.cs" />
+    <Compile Include="YLang\YSymbol.cs" />
+    <Compile Include="YLang\YField.cs" />
+    <Compile Include="YLang\YClass.cs" />
+    <Compile Include="YLang\YSyntaxNode.cs" />
+    <Compile Include="YLang\YRoot.cs" />
+    <Compile Include="YLang\YSyntaxWalker.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="CppLang\" />
+    <Folder Include="YLang\" />
+    <Folder Include="YLang\Expresions\" />
+    <Folder Include="YLang\Types\" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Configs\uncrustify.cfg" />

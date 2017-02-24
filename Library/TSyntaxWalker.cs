@@ -71,6 +71,24 @@ namespace SharpCpp
             }
         }
 
+        public override void VisitFieldDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.FieldDeclarationSyntax node)
+        {
+            base.VisitFieldDeclaration(node);
+
+            // todo
+        }
+
+        //public override void VisitVariableDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.VariableDeclarationSyntax node)
+        //{
+        //    base.VisitVariableDeclaration(node);
+
+        //    foreach (var a in node.Ancestors()) {
+        //        var atype = a.GetType();
+
+        //        System.Console.WriteLine("node: " + a + " type: " + atype);
+        //    }
+        //}
+
         public TFile[] GetGeneratedFiles()
         {
             List<TFile> files = new List<TFile>();

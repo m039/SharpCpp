@@ -15,6 +15,8 @@ namespace CppLang
 
         private readonly TFile _source;
 
+        internal YSyntaxNode Root;
+
         // Note: namespace may be null
         public GenerationUnit(string @namespace, string name)
         {
@@ -30,6 +32,30 @@ namespace CppLang
                 Name = name,
                 Type = TFile.TFileType.SOURCE
             };
+
+            // Create AST manually
+
+            Root = new YRoot();
+            var _namespaceNode = new YNamespace() {
+                Name = "CSharpFooBarLibrary"
+            };
+
+            var _classNode = new YClass() {
+                Name = "Foo"
+            };
+
+            var _fieldNode = new YField() {
+                Type = YType.Int,
+                Name = "number",
+                Value = new YConstExpr(1),
+                Visibility = YVisibility.Public
+            };
+
+            _classNode.AddChild(_fieldNode);
+            _namespaceNode.AddChild(_classNode);
+            _namespaceNode.AddChild(_classNode);
+
+            Root.AddChild(_namespaceNode);
         }
 
         public TFile GeneratedSourceFile()

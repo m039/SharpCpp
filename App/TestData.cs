@@ -3,16 +3,16 @@ namespace SharpCpp
 {
     public static class TestData
     {
-
-        public const string InputCode1 = @"using System;
-using System.Collections;
-using System.Linq;
-using System.Text;
-
-namespace CppFooBar
+        
+        public const string InputCode1 = @"
+namespace CSharpFooBarLibrary 
 {
-    class Foo {}
-}";
+    public class Foo {
 
+        public int number = 0;
+
+    }
+}";
+        
     }
 }
