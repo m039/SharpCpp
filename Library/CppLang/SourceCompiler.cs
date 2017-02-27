@@ -68,53 +68,7 @@ namespace SharpCpp
                 builder.Append(_typeMapper.ValueOf(method.Signature.Parameters));
                 builder.Append(")");
 
-                Append(builder, method.Body);
-            }
-
-            static void Append(StringBuilder builder, YStatement statement)
-            {
-                if (statement is YBlock) {
-                    var block = (YBlock)statement;
-
-                    builder.Append("{");
-
-                    foreach (var s in block.Statements) {
-                        Append(builder, s);
-                    }
-
-                    builder.Append("}");
-                } else if (statement is YReturn) {
-                    var @return = (YReturn)statement;
-
-                    builder.Append("return ");
-                    Append(builder, @return.Value);
-                    builder.Append(";");
-
-                } else if (statement is YAssign) {
-                    var assign = (YAssign)statement;
-
-                    Append(builder, assign.Left);
-                    builder.Append("=");
-                    Append(builder, assign.Right);
-                    builder.Append(";");
-                }
-            }
-
-            static void Append(StringBuilder builder, YExpr expr)
-            {
-                if (expr is YConstExpr) {
-                    builder.Append("" + expr);
-                } else if (expr is YThisExpr) {
-                    builder.Append("this");
-                } else if (expr is YMemberAccessExpr) {
-                    var memberAccess = (YMemberAccessExpr)expr;
-
-                    Append(builder, memberAccess.Expression);
-                    builder.Append("->"); // But what with "this."?
-                    builder.Append(memberAccess.Name);
-                } else if (expr is YIdentifierExpr) {
-                    builder.Append(((YIdentifierExpr)expr).Name);
-                }
+                builder.AppendEx(method.Body);
             }
 
             internal protected override void FinalizeBuilder(StringBuilder builder)
@@ -134,5 +88,56 @@ namespace SharpCpp
         {
             return new SourceWalker(@class);
         }
+    }
+
+    public static partial class Extensions
+    {
+
+        static public void AppendEx(this StringBuilder builder, YStatement statement)
+        {
+            if (statement is YBlock) {
+                var block = (YBlock)statement;
+
+                builder.Append("{");
+
+                foreach (var s in block.Statements) {
+                    AppendEx(builder, s);
+                }
+
+                builder.Append("}");
+            } else if (statement is YReturn) {
+                var @return = (YReturn)statement;
+
+                builder.Append("return ");
+                AppendEx(builder, @return.Value);
+                builder.Append(";");
+
+            } else if (statement is YAssign) {
+                var assign = (YAssign)statement;
+
+                AppendEx(builder, assign.Left);
+                builder.Append("=");
+                AppendEx(builder, assign.Right);
+                builder.Append(";");
+            }
+        }
+
+        static public void AppendEx(this StringBuilder builder, YExpr expr)
+        {
+            if (expr is YConstExpr) {
+                builder.Append("" + expr);
+            } else if (expr is YThisExpr) {
+                builder.Append("this");
+            } else if (expr is YMemberAccessExpr) {
+                var memberAccess = (YMemberAccessExpr)expr;
+
+                AppendEx(builder, memberAccess.Expression);
+                builder.Append("->"); // But what with "this."?
+                builder.Append(memberAccess.Name);
+            } else if (expr is YIdentifierExpr) {
+                builder.Append(((YIdentifierExpr)expr).Name);
+            }
+        }
+
     }
 }

@@ -176,8 +176,6 @@ namespace SharpCpp
 
     static partial class Extensions
     {
-        #region Utils
-
         static public string GetName(this NamespaceDeclarationSyntax syntax)
         {
             return syntax.Name.ToString();
@@ -221,7 +219,5 @@ namespace SharpCpp
 
             throw new TException("Unsupported return type");
         }
-
-        #endregion
     }
 }
