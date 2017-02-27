@@ -5,13 +5,13 @@ namespace SharpCpp
     {
         public YType ReturnType;
 
-        public YVar[] Params;
+        public YParameter[] Parameters;
 
-        public YFuncSignature(string name, YType returnType, YVar[] @params)
+        public YFuncSignature(string name, YType returnType, YParameter[] @params)
         {
             Name = name;
             ReturnType = returnType;
-            Params = @params;
+            Parameters = @params;
         }
     }
 }

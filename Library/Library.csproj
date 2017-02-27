@@ -76,9 +76,19 @@
     <Compile Include="YLang\YSyntaxWalker.cs" />
     <Compile Include="CppLang\Generator.cs" />
     <Compile Include="YLang\YMethod.cs" />
-    <Compile Include="YLang\YVar.cs" />
     <Compile Include="YLang\Statements\YStatement.cs" />
     <Compile Include="YLang\Types\YFuncSignature.cs" />
+    <Compile Include="YLang\Statements\YReturn.cs" />
+    <Compile Include="CppLang\TypeMapper.cs" />
+    <Compile Include="YLang\Expresions\YFieldAccessExpr.cs" />
+    <Compile Include="YLang\YParameter.cs" />
+    <Compile Include="YLang\Statements\YBlock.cs" />
+    <Compile Include="YLang\TUnsupportedException.cs" />
+    <Compile Include="YLang\Statements\YVar.cs" />
+    <Compile Include="YLang\Statements\YAssign.cs" />
+    <Compile Include="YLang\Expresions\YMemberAccessExpr.cs" />
+    <Compile Include="YLang\Expresions\YThisExpr.cs" />
+    <Compile Include="YLang\Expresions\YIdentifierExpr.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Text;
+using System.Collections.Generic;
 
 namespace SharpCpp
 {
@@ -7,12 +8,17 @@ namespace SharpCpp
     {
         class SourceWalker : UnitWalker
         {
+            protected const string ConstructorsMark = "{{constructors}}";
+
             public SourceWalker(YClass @class) : base(@class) { }
 
             StringBuilder _constructor = new StringBuilder();
+
             bool _constructorInited;
 
-            protected override void InitBuilder(StringBuilder builder)
+            TypeMapper _typeMapper = new TypeMapper(new HashSet<string>()); // ignore includes for now
+
+            internal protected override void InitBuilder(StringBuilder builder)
             {
                 base.InitBuilder(builder);
 
@@ -22,15 +28,19 @@ namespace SharpCpp
 
                 builder.Append($"#include \"{ Class.Name }.hpp\"\n");
                 builder.Append(IncludesMark);
-
+                builder.Append("\n");
+                builder.Append(ConstructorsMark);
             }
 
-            protected override void Visit(StringBuilder builder, YNamespace @namespace)
+            internal protected override void Visit(StringBuilder builder, YNamespace @namespace)
             {
-                builder.Append("using namespace " + @namespace.Name + ";");
+                builder.Replace(
+                    ConstructorsMark, 
+                    "using namespace " + @namespace.Name + ";\n\n" + ConstructorsMark
+                );
             }
 
-            protected override void Visit(StringBuilder builder, YField field)
+            internal protected override void Visit(StringBuilder builder, YField field)
             {
                 base.Visit(builder, field);
 
@@ -46,15 +56,79 @@ namespace SharpCpp
                 }
             }
 
-            protected override void FinalizeBuilder(StringBuilder builder)
+            internal protected override void Visit(StringBuilder builder, YMethod method)
+            {
+                base.Visit(builder, method);
+
+                builder.Append(_typeMapper.ValueOf(method.Signature.ReturnType));
+                builder.Append(" ");
+                builder.Append($"{ Class.Name }::{ method.Name }");
+
+                builder.Append("(");
+                builder.Append(_typeMapper.ValueOf(method.Signature.Parameters));
+                builder.Append(")");
+
+                Append(builder, method.Body);
+            }
+
+            static void Append(StringBuilder builder, YStatement statement)
+            {
+                if (statement is YBlock) {
+                    var block = (YBlock)statement;
+
+                    builder.Append("{");
+
+                    foreach (var s in block.Statements) {
+                        Append(builder, s);
+                    }
+
+                    builder.Append("}");
+                } else if (statement is YReturn) {
+                    var @return = (YReturn)statement;
+
+                    builder.Append("return ");
+                    Append(builder, @return.Value);
+                    builder.Append(";");
+
+                } else if (statement is YAssign) {
+                    var assign = (YAssign)statement;
+
+                    Append(builder, assign.Left);
+                    builder.Append("=");
+                    Append(builder, assign.Right);
+                    builder.Append(";");
+                }
+            }
+
+            static void Append(StringBuilder builder, YExpr expr)
+            {
+                if (expr is YConstExpr) {
+                    builder.Append("" + expr);
+                } else if (expr is YFieldAccessExpr) {
+                    builder.Append("" + ((YFieldAccessExpr)expr).Field.Name);
+                } else if (expr is YThisExpr) {
+                    builder.Append("this"); // But what with "this."?
+                } else if (expr is YMemberAccessExpr) {
+                    var memberAccess = (YMemberAccessExpr)expr;
+
+                    Append(builder, memberAccess.Expression);
+                    builder.Append("->");
+                    builder.Append(memberAccess.Name);
+                } else if (expr is YIdentifierExpr) {
+                    builder.Append(((YIdentifierExpr)expr).Name);
+                }
+            }
+
+            internal protected override void FinalizeBuilder(StringBuilder builder)
             {
                 base.FinalizeBuilder(builder);
 
                 builder.Replace(IncludesMark, "");
 
-                // or should be placed before any functions
+                // only default constructor supported
                 _constructor.Append("{}");
-                builder.Append(_constructor);
+
+                builder.Replace(ConstructorsMark, _constructor.ToString());
             }
         }
 

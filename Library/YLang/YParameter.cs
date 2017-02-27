@@ -1,11 +1,11 @@
 ﻿using System;
 namespace SharpCpp
 {
-    public class YVar : YSymbol
+    public class YParameter : YType
     {
         public YType Type;
 
-        public YVar(string name, YType type)
+        public YParameter(string name, YType type)
         {
             Name = name;
             Type = type;

@@ -33,7 +33,7 @@ namespace SharpCpp
                 _typeMapper = new TypeMapper(_includes);
             }
 
-            protected override void InitBuilder(StringBuilder builder)
+            internal protected override void InitBuilder(StringBuilder builder)
             {
                 base.InitBuilder(builder);
 
@@ -42,13 +42,13 @@ namespace SharpCpp
                 builder.Append(IncludesMark);
             }
 
-            protected override void Visit(StringBuilder builder, YNamespace @namespace)
+            internal protected override void Visit(StringBuilder builder, YNamespace @namespace)
             {
                 builder.Append("namespace " + @namespace.Name + "{");
                 _nestedLevels.Add(@namespace);
             }
 
-            protected override void Visit(StringBuilder builder, YClass @class)
+            internal protected override void Visit(StringBuilder builder, YClass @class)
             {
                 if (!@class.IsNested) {
                     var nestedLevelsCount = _nestedLevels.Count - 1;
@@ -71,29 +71,7 @@ namespace SharpCpp
                 _nestedLevels.Add(@class);
             }
 
-            class TypeMapper
-            {
-                ISet<string> _includes;
-
-                internal TypeMapper(ISet<string> includes)
-                {
-                    _includes = includes;
-                }
-
-                public string ValueOf(YType type)
-                {
-                    if (type == YType.Int) {
-                        _includes.Add("<cstdint>");
-                        return "int32_t";
-                    } else if (type == YType.Void) {
-                        return "void";
-                    } else {
-                        throw new TException("Unsupported type");
-                    }
-                }
-            }
-
-            protected override void Visit(StringBuilder builder, YField field)
+            internal protected override void Visit(StringBuilder builder, YField field)
             {
                 StringBuilder b;
 
@@ -119,7 +97,7 @@ namespace SharpCpp
                 b.Append(";");
             }
 
-            protected override void Visit(YMethod method)
+            internal protected override void Visit(StringBuilder builder, YMethod method)
             {
                 StringBuilder b;
 
@@ -135,33 +113,12 @@ namespace SharpCpp
                 b.Append(" ");
                 b.Append(method.Signature.Name);
 
-                if (method.Signature.Params?.Length > 0) {
-                    int length = method.Signature.Params.Length;
-
-                    Action<int> AppendValueOfVar = (index) => {
-                        var param = method.Signature.Params[index];
-                        b.Append(_typeMapper.ValueOf(param.Type));
-                        b.Append(" ");
-                        b.Append(param.Name);
-                    };
-
-                    b.Append("(");
-
-                    AppendValueOfVar(0);
-
-                    for (var i = 1; i < length; i++) {
-                        b.Append(",");
-                        AppendValueOfVar(i);
-                    }
-
-                    b.Append(");");
-
-                } else {
-                    b.Append("();");
-                }
+                b.Append("(");
+                b.Append(_typeMapper.ValueOf(method.Signature.Parameters));
+                b.Append(");");
             }
 
-            protected override void FinalizeBuilder(StringBuilder builder)
+            internal protected override void FinalizeBuilder(StringBuilder builder)
             {
                 base.FinalizeBuilder(builder);
 
@@ -205,8 +162,7 @@ namespace SharpCpp
                     var constructors = GetBuilder(p.Key, Constructor);
 
                     if (fields.Length > 0 || methods.Length > 0 || constructors.Length > 0) {
-                        b.Append("private:\n");
-
+                        b.Append(p.Key.GetName() + ":\n");
                         b.Append(fields);
                         b.Append(methods);
                         b.Append(constructors);

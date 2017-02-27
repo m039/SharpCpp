@@ -6,7 +6,57 @@ namespace SharpCpp
 {
     public abstract class UnitCompiler
     {
-        public class UnitWalker : YSyntaxWalker
+        // To hide YSyntaxWalker's functions from descedants of UnitWalker.
+        class YSyntaxWalkerAdapter : YSyntaxWalker
+        {
+            UnitWalker _walker;
+
+            public YSyntaxWalkerAdapter(UnitWalker walker)
+            {
+                _walker = walker;
+            }
+
+            #region YSyntaxWalker overrides
+
+            protected override void Visit(YNamespace @namespace)
+            {
+                _walker.Visit(_walker._builder, @namespace);
+            }
+
+            protected override void Visit(YClass @class)
+            {
+                _walker.Visit(_walker._builder, @class);
+            }
+
+            protected override void Visit(YField @field)
+            {
+                _walker.Visit(_walker._builder, @field);
+            }
+
+            protected override void Visit(YMethod @method)
+            {
+                _walker.Visit(_walker._builder, @method);
+            }
+
+            protected override void OnPreWalk()
+            {
+                base.OnPreWalk();
+
+                _walker._builder.Clear();
+                _walker.InitBuilder(_walker._builder);
+            }
+
+            protected override void OnPostWalk()
+            {
+                base.OnPostWalk();
+
+                _walker.FinalizeBuilder(_walker._builder);
+            }
+
+            #endregion
+        }
+
+        public class UnitWalker
         {
             protected const string PublicMark = "{{public}}";
 
@@ -14,7 +64,7 @@ namespace SharpCpp
 
             protected const string IncludesMark = "{{includes}}";
 
-            readonly StringBuilder _builder = new StringBuilder();
+            internal readonly StringBuilder _builder = new StringBuilder();
 
             protected YClass Class;
 
@@ -23,53 +73,17 @@ namespace SharpCpp
                 Class = @class;
             }
 
-#region YSyntaxWalker overrides
+            internal protected virtual void InitBuilder(StringBuilder builder) { }
 
-            protected override void Visit(YNamespace @namespace) {
-                Visit(_builder, @namespace);
-            }
+            internal protected virtual void Visit(StringBuilder builder, YNamespace @namespace) { }
 
-            protected override void Visit(YClass @class) {
-                Visit(_builder, @class);
-            }
+            internal protected virtual void Visit(StringBuilder builder, YClass @class) { }
 
-            protected override void Visit(YField @field) {
-                Visit(_builder, @field);
-            }
+            internal protected virtual void Visit(StringBuilder builder, YField @field) { }
 
-            protected override void Visit(YMethod @method)
-            {
-                Visit(_builder, @method);
-            }
+            internal protected virtual void Visit(StringBuilder builder, YMethod @method) { }
 
-#endregion
-
-            protected virtual void InitBuilder(StringBuilder builder) { }
-
-            protected virtual void Visit(StringBuilder builder, YNamespace @namespace) { }
-
-            protected virtual void Visit(StringBuilder builder, YClass @class) { }
-
-            protected virtual void Visit(StringBuilder builder, YField @field) { }
-
-            protected virtual void Visit(StringBuilder builder, YMethod @method) { }
-
-            protected virtual void FinalizeBuilder(StringBuilder builder) { }
-
-            protected override void OnPreWalk()
-            {
-                base.OnPreWalk();
-
-                _builder.Clear();
-                InitBuilder(_builder);
-            }
-
-            protected override void OnPostWalk()
-            {
-                base.OnPostWalk();
-
-                FinalizeBuilder(_builder);
-            }
+            internal protected virtual void FinalizeBuilder(StringBuilder builder) { }
 
             internal string GeneratedText()
             {
@@ -80,8 +94,9 @@ namespace SharpCpp
         public string Compile(YRoot root, GenerationUnit unit)
         {
             var walker = CreateUnitWalker(unit.Class);
+            var walkerAdapter = new YSyntaxWalkerAdapter(walker);
 
-            walker.Walk(root);
+            walkerAdapter.Walk(root);
 
             return walker.GeneratedText();
         }

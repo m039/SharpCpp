@@ -1,7 +1,7 @@
 ﻿using System;
 namespace SharpCpp
 {
-    public interface YStatement
+    public class YThisExpr : YExpr
     {
     }
 }

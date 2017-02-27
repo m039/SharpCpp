@@ -20,7 +20,7 @@ namespace SharpCpp
         {
         }
 
-        public YMethod(string name, YType returnType, YVar[] @params)
+        public YMethod(string name, YType returnType, YParameter[] @params)
         {
             Signature = new YFuncSignature(name, returnType, @params);
         }
@@ -30,5 +30,7 @@ namespace SharpCpp
         public YFuncSignature Signature;
 
         public YVisibility Visibility;
+
+        public YStatement Body;
     }
 }
