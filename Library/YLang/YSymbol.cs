@@ -8,9 +8,9 @@ namespace SharpCpp
     {
         public string Name;
 
-        private readonly List<YSyntaxNode> _Nodes = new List<YSyntaxNode>();
+        readonly List<YSyntaxNode> _Nodes = new List<YSyntaxNode>();
 
-        public void AddChild(YSyntaxNode node)
+        public virtual void AddChild(YSyntaxNode node)
         {
             _Nodes.Add(node);
         }

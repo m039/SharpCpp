@@ -76,6 +76,10 @@
     <Compile Include="YLang\YRoot.cs" />
     <Compile Include="YLang\YSyntaxWalker.cs" />
     <Compile Include="CppLang\Generator.cs" />
+    <Compile Include="YLang\YMethod.cs" />
+    <Compile Include="YLang\Types\YLambda.cs" />
+    <Compile Include="YLang\YVar.cs" />
+    <Compile Include="YLang\Statements\YStatement.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -85,6 +89,7 @@
     <Folder Include="YLang\" />
     <Folder Include="YLang\Expresions\" />
     <Folder Include="YLang\Types\" />
+    <Folder Include="YLang\Statements\" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Configs\uncrustify.cfg" />

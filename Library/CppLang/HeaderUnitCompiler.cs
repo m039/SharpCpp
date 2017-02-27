@@ -7,67 +7,94 @@ namespace SharpCpp
 
     public class HeaderUnitCompiler : UnitCompiler
     {
-        class HeaderWalker : YSyntaxWalker
+        class HeaderWalker : UnitWalker
         {
-            readonly StringBuilder _builder  = new StringBuilder();
-
             // true if needed closed bracket
             readonly List<YSymbol> _nestedLevels = new List<YSymbol>();
 
             readonly HashSet<string> _includes = new HashSet<string>();
 
-            const string PublicMark = "{{public}}";
+            public HeaderWalker(YClass @class) : base(@class) { }
 
-            const string PrivateMark = "{{private}}";
-
-            const string IncludesMark = "{{includes}}";
-
-            public HeaderWalker()
+            protected override void InitBuilder(StringBuilder builder)
             {
-                _builder.Append("#pragma once\n");
-                _builder.AppendLine();
-                _builder.Append(IncludesMark);
+                base.InitBuilder(builder);
+
+                builder.Append("#pragma once\n");
+                builder.AppendLine();
+                builder.Append(IncludesMark);
             }
 
-            protected override void Visit(YNamespace @namespace)
+            protected override void Visit(StringBuilder builder, YNamespace @namespace)
             {
-                _builder.Append("namespace " + @namespace.Name + "{");
+                builder.Append("namespace " + @namespace.Name + "{");
                 _nestedLevels.Add(@namespace);
             }
 
+            class BuilderId
+            {
+                internal enum BuilderType
+                {
+                    Field, Constructor
+                }
+                
+                YVisibility visibility;
+                BuilderType type;
+
+                internal BuilderId(YVisibility visibility, BuilderType type)
+                {
+                    this.visibility = visibility;
+                    this.type = type;
+                }
+            }
+
+            Dictionary<BuilderId, StringBuilder> _builders = new Dictionary<BuilderId, StringBuilder>();
+
             // todo aggregate builders as class builders
 
-            public StringBuilder _publicFields = new StringBuilder();
+            StringBuilder _publicFields = new StringBuilder();
 
-            public StringBuilder _privateFields = new StringBuilder();
+            StringBuilder _privateFields = new StringBuilder();
 
-            protected override void Visit(YClass @class)
+            StringBuilder _contructors = new StringBuilder();
+
+            StringBuilder GetBuilder(YVisibility visibility, BuilderId.BuilderType type)
+            {
+                var id = new BuilderId(visibility, type);
+                if (_builders.ContainsKey(id)) {
+                    return _builders[id];
+                }
+
+                var builder = new StringBuilder();
+                _builders[id] = builder;
+                return builder;
+            }
+
+            protected override void Visit(StringBuilder builder, YClass @class)
             {
                 if (!@class.IsNested) {
                     var nestedLevelsCount = _nestedLevels.Count - 1;
                     if (nestedLevelsCount >= 0 && _nestedLevels[nestedLevelsCount] is YClass) {
-                        CloseClass();
+                        CloseClass(builder);
                         _nestedLevels.RemoveAt(nestedLevelsCount);
                     }
                 }
 
-                _builder.Append("class " + @class.Name + "{");
+                builder.Append("class " + @class.Name + "{");
 
                 _publicFields.Clear();
                 _privateFields.Clear();
+                _contructors.Clear();
 
-                if (@class.HasPrivateFields()) {
-                    _builder.Append(PrivateMark);
-                }
+                _contructors.Append(@class.Name + "();");
 
-                if (@class.HasPublicFields()) {
-                    _builder.Append(PublicMark);
-                }
+                builder.Append(PrivateMark);
+                builder.Append(PublicMark);
 
                 _nestedLevels.Add(@class);
             }
 
-            protected override void Visit(YField field)
+            protected override void Visit(StringBuilder builder, YField field)
             {
                 StringBuilder b;
 
@@ -99,21 +126,16 @@ namespace SharpCpp
                 b.Append(";");
             }
 
-            public string GeneratedText()
+            protected override void FinalizeBuilder(StringBuilder builder)
             {
-                CloseBrackets();
+                base.FinalizeBuilder(builder);
 
-                return _builder.ToString();
-            }
-
-            void CloseBrackets()
-            {
                 for (int i = _nestedLevels.Count - 1; i >= 0; i--) {
                     var l = _nestedLevels[i];
                     if (l is YClass) {
-                        CloseClass();
+                        CloseClass(builder);
                     } else if (l is YNamespace) {
-                        _builder.Append("}");
+                        builder.Append("}");
                     } else {
                         throw new TException("Unsupported nesting");
                     }
@@ -130,34 +152,31 @@ namespace SharpCpp
                     sb.AppendLine();
                 }
 
-                _builder.Replace(IncludesMark, sb.ToString());
+                builder.Replace(IncludesMark, sb.ToString());
             }
 
-            private void CloseClass()
+            void CloseClass(StringBuilder builder)
             {
-                _builder.Append("};");
+                builder.Append("};");
 
                 if (_privateFields.Length > 0) {
-                    _builder.Replace(PrivateMark, "private:\n" + _privateFields);
+                    builder.Replace(PrivateMark, "private:\n" + _privateFields);
                 } else {
-                    _builder.Replace(PrivateMark, "");
+                    builder.Replace(PrivateMark, "");
                 }
 
-                if (_publicFields.Length > 0) {
-                    _builder.Replace(PublicMark, "public:\n" + _publicFields);
-                } else {
-                    _builder.Replace(PublicMark, "");
-                }
+                // add default constructor
+
+                builder.Replace(PublicMark,
+                                 "public:\n" +
+                                 _contructors +
+                                 (_publicFields.Length > 0 ? _publicFields.ToString() : ""));
             }
         }
 
-        public override string Compile(YRoot root, GenerationUnit unit)
+        public override UnitWalker CreateUnitWalker(YClass @class)
         {
-            var walker = new HeaderWalker();
-
-            walker.Walk(root);
-
-            return walker.GeneratedText();
+            return new HeaderWalker(@class);
         }
     }
 }

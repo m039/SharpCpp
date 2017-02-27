@@ -5,7 +5,7 @@ namespace SharpCpp
 {
     public class GenerationUnit
     {
-        readonly YClass Class;
+        public readonly YClass Class;
 
         readonly TFile _header;
 
