@@ -19,13 +19,19 @@ namespace SharpCpp
 
             const BuilderId.BuilderType Constructor = BuilderId.BuilderType.Constructor;
 
+            const BuilderId.BuilderType Method = BuilderId.BuilderType.Method;
+
             #endregion
 
             readonly List<YSymbol> _nestedLevels = new List<YSymbol>();
 
             readonly HashSet<string> _includes = new HashSet<string>();
 
-            public HeaderWalker(YClass @class) : base(@class) { }
+            TypeMapper _typeMapper;
+
+            public HeaderWalker(YClass @class) : base(@class) { 
+                _typeMapper = new TypeMapper(_includes);
+            }
 
             protected override void InitBuilder(StringBuilder builder)
             {
@@ -65,6 +71,28 @@ namespace SharpCpp
                 _nestedLevels.Add(@class);
             }
 
+            class TypeMapper
+            {
+                ISet<string> _includes;
+
+                internal TypeMapper(ISet<string> includes)
+                {
+                    _includes = includes;
+                }
+
+                public string ValueOf(YType type)
+                {
+                    if (type == YType.Int) {
+                        _includes.Add("<cstdint>");
+                        return "int32_t";
+                    } else if (type == YType.Void) {
+                        return "void";
+                    } else {
+                        throw new TException("Unsupported type");
+                    }
+                }
+            }
+
             protected override void Visit(StringBuilder builder, YField field)
             {
                 StringBuilder b;
@@ -77,13 +105,7 @@ namespace SharpCpp
                     throw new TException("Unsupported access");
                 }
 
-                if (field.Type == YType.Int) {
-                    _includes.Add("<cstdint>");
-                    b.Append("int32_t");
-                } else {
-                    throw new TException("Unsupported type");
-                }
-
+                b.Append(_typeMapper.ValueOf(field.Type));
                 b.Append(" " + field.Name);
 
                 if (field.Value != null) {
@@ -95,6 +117,48 @@ namespace SharpCpp
                 }
 
                 b.Append(";");
+            }
+
+            protected override void Visit(YMethod method)
+            {
+                StringBuilder b;
+
+                if (method.Visibility == Private) {
+                    b = GetBuilder(Private, Method);
+                } else if (method.Visibility == Public) {
+                    b = GetBuilder(Public, Method);
+                } else {
+                    throw new TException("Unsupported visibility");
+                }
+
+                b.Append(_typeMapper.ValueOf(method.Signature.ReturnType));
+                b.Append(" ");
+                b.Append(method.Signature.Name);
+
+                if (method.Signature.Params?.Length > 0) {
+                    int length = method.Signature.Params.Length;
+
+                    Action<int> AppendValueOfVar = (index) => {
+                        var param = method.Signature.Params[index];
+                        b.Append(_typeMapper.ValueOf(param.Type));
+                        b.Append(" ");
+                        b.Append(param.Name);
+                    };
+
+                    b.Append("(");
+
+                    AppendValueOfVar(0);
+
+                    for (var i = 1; i < length; i++) {
+                        b.Append(",");
+                        AppendValueOfVar(i);
+                    }
+
+                    b.Append(");");
+
+                } else {
+                    b.Append("();");
+                }
             }
 
             protected override void FinalizeBuilder(StringBuilder builder)
@@ -130,22 +194,26 @@ namespace SharpCpp
             {
                 builder.Append("};");
 
-                var privateFields = GetBuilder(Private, Field);
+                foreach (var p in new[] {
+                    new KeyValuePair<YVisibility, string>(Private, PrivateMark),
+                    new KeyValuePair<YVisibility, string>(Public, PublicMark)
+                }) {
+                    var b = new StringBuilder();
 
-                if (privateFields.Length > 0) {
-                    builder.Replace(PrivateMark, "private:\n" + privateFields);
-                } else {
-                    builder.Replace(PrivateMark, "");
+                    var fields = GetBuilder(p.Key, Field);
+                    var methods = GetBuilder(p.Key, Method);
+                    var constructors = GetBuilder(p.Key, Constructor);
+
+                    if (fields.Length > 0 || methods.Length > 0 || constructors.Length > 0) {
+                        b.Append("private:\n");
+
+                        b.Append(fields);
+                        b.Append(methods);
+                        b.Append(constructors);
+                    }
+
+                    builder.Replace(p.Value, b.ToString());
                 }
-
-                // add default constructor
-
-                var publicFields = GetBuilder(Public, Field);
-
-                builder.Replace(PublicMark,
-                                 "public:\n" +
-                                 GetBuilder(Public, Constructor) +
-                                 (publicFields.Length > 0 ? publicFields.ToString() : ""));
             }
 
             #region builders functions
@@ -179,7 +247,7 @@ namespace SharpCpp
             {
                 internal enum BuilderType
                 {
-                    Field, Constructor
+                    Field, Constructor, Method
                 }
 
                 readonly YVisibility visibility;

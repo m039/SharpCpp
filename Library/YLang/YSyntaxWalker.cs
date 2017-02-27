@@ -11,6 +11,8 @@ namespace SharpCpp
 
         protected virtual void Visit(YField @field) { }
 
+        protected virtual void Visit(YMethod @method) { }
+
         protected virtual void OnPreWalk() { }
 
         protected virtual void OnPostWalk() { }
@@ -26,7 +28,9 @@ namespace SharpCpp
                 Visit((YNamespace)node);
             } else if (node is YClass) {
                 Visit((YClass)node);
-            } if (node is YField) {
+            } else if (node is YMethod) {
+                Visit((YMethod)node);
+            } else if (node is YField) {
                 Visit((YField)node);
             }
 

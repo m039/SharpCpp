@@ -36,6 +36,8 @@ namespace SharpCpp
                         _generationUnits.Add(new GenerationUnit(@class));
                     }
 
+                    AddTestMethod(@class);
+
                     // Fields
 
                     foreach (var inputField in inputClass.ChildNodes().OfType<FieldDeclarationSyntax>()) {
@@ -95,5 +97,11 @@ namespace SharpCpp
 
             return files.ToArray();
         }
-    }
+
+        // For testing only
+        void AddTestMethod(YClass @class)
+        {
+            @class.AddChild(new YMethod("ToStringus", YType.Int));
+        }
+   }
 }

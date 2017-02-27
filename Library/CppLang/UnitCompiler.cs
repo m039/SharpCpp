@@ -14,7 +14,7 @@ namespace SharpCpp
 
             protected const string IncludesMark = "{{includes}}";
 
-            private readonly StringBuilder _builder = new StringBuilder();
+            readonly StringBuilder _builder = new StringBuilder();
 
             protected YClass Class;
 
@@ -37,6 +37,11 @@ namespace SharpCpp
                 Visit(_builder, @field);
             }
 
+            protected override void Visit(YMethod @method)
+            {
+                Visit(_builder, @method);
+            }
+
 #endregion
 
             protected virtual void InitBuilder(StringBuilder builder) { }
@@ -46,6 +51,8 @@ namespace SharpCpp
             protected virtual void Visit(StringBuilder builder, YClass @class) { }
 
             protected virtual void Visit(StringBuilder builder, YField @field) { }
+
+            protected virtual void Visit(StringBuilder builder, YMethod @method) { }
 
             protected virtual void FinalizeBuilder(StringBuilder builder) { }
 

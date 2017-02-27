@@ -6,7 +6,7 @@ namespace SharpCpp
 {
     public class YSymbol : YSyntaxNode
     {
-        public string Name;
+        public virtual string Name { get; set; }
 
         readonly List<YSyntaxNode> _Nodes = new List<YSyntaxNode>();
 

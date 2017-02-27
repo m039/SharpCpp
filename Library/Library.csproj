@@ -67,7 +67,6 @@
     <Compile Include="YLang\Expresions\YConstExpr.cs" />
     <Compile Include="YLang\Expresions\YExpr.cs" />
     <Compile Include="YLang\Types\YType.cs" />
-    <Compile Include="YLang\Types\YIntType.cs" />
     <Compile Include="YLang\YNamespace.cs" />
     <Compile Include="YLang\YSymbol.cs" />
     <Compile Include="YLang\YField.cs" />
@@ -77,9 +76,9 @@
     <Compile Include="YLang\YSyntaxWalker.cs" />
     <Compile Include="CppLang\Generator.cs" />
     <Compile Include="YLang\YMethod.cs" />
-    <Compile Include="YLang\Types\YLambda.cs" />
     <Compile Include="YLang\YVar.cs" />
     <Compile Include="YLang\Statements\YStatement.cs" />
+    <Compile Include="YLang\Types\YFuncSignature.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
