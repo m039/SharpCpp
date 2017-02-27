@@ -98,25 +98,21 @@ namespace SharpCpp
                         var block = new YBlock();
 
                         foreach (var s in inputMethod.Body.Statements) {
-                            if (s is ReturnStatementSyntax) {
+                            if (s is ReturnStatementSyntax) { // return
                                 var returnStatement = (ReturnStatementSyntax)s;
+                                YExpr returnExpression = null;
 
                                 if (returnStatement.Expression is IdentifierNameSyntax) {
-                                    var fieldName = ((IdentifierNameSyntax)returnStatement.Expression).Identifier.ToString();
-
-                                    try {
-                                        var field = @class.Nodes.OfType<YField>().Single((arg) => arg.Name == fieldName);
-                                        block.Statements.Add(new YReturn(new YFieldAccessExpr(field)));
-
-                                    } catch (InvalidOperationException e) {
-                                        System.Console.WriteLine($"Field '{ fieldName }' is not found. { e }");
-                                    }
-
+                                    returnExpression = new YIdentifierExpr((IdentifierNameSyntax)returnStatement.Expression);
                                 } else {
                                     //throw new TUnsupportedException();
                                 }
 
-                            } else if (s is ExpressionStatementSyntax) {
+                                if (returnExpression != null) {
+                                    block.Statements.Add(new YReturn(returnExpression));
+                                }
+
+                            } else if (s is ExpressionStatementSyntax) { // assignment
                                 var expressionStatement = (ExpressionStatementSyntax)s;
 
                                 if (expressionStatement.Expression is AssignmentExpressionSyntax) {
@@ -137,12 +133,14 @@ namespace SharpCpp
                                             expr,
                                             memberAccessExpression.Name.Identifier.ToString()
                                         );
+                                    } else if (assignmentExpression.Left is IdentifierNameSyntax) {
+                                        left = new YIdentifierExpr((IdentifierNameSyntax)assignmentExpression.Left);
                                     }
 
                                     YExpr right = null;
 
                                     if (assignmentExpression.Right is IdentifierNameSyntax) {
-                                        right = new YIdentifierExpr(((IdentifierNameSyntax)assignmentExpression.Right).Identifier.ToString());
+                                        right = new YIdentifierExpr((IdentifierNameSyntax)assignmentExpression.Right);
                                     }
 
                                     if (left != null && right != null) {

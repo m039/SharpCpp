@@ -104,15 +104,13 @@ namespace SharpCpp
             {
                 if (expr is YConstExpr) {
                     builder.Append("" + expr);
-                } else if (expr is YFieldAccessExpr) {
-                    builder.Append("" + ((YFieldAccessExpr)expr).Field.Name);
                 } else if (expr is YThisExpr) {
-                    builder.Append("this"); // But what with "this."?
+                    builder.Append("this");
                 } else if (expr is YMemberAccessExpr) {
                     var memberAccess = (YMemberAccessExpr)expr;
 
                     Append(builder, memberAccess.Expression);
-                    builder.Append("->");
+                    builder.Append("->"); // But what with "this."?
                     builder.Append(memberAccess.Name);
                 } else if (expr is YIdentifierExpr) {
                     builder.Append(((YIdentifierExpr)expr).Name);
