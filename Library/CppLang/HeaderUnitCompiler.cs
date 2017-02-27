@@ -9,7 +9,18 @@ namespace SharpCpp
     {
         class HeaderWalker : UnitWalker
         {
-            // true if needed closed bracket
+            #region aliases
+
+            const YVisibility Public = YVisibility.Public;
+
+            const YVisibility Private = YVisibility.Private;
+
+            const BuilderId.BuilderType Field = BuilderId.BuilderType.Field;
+
+            const BuilderId.BuilderType Constructor = BuilderId.BuilderType.Constructor;
+
+            #endregion
+
             readonly List<YSymbol> _nestedLevels = new List<YSymbol>();
 
             readonly HashSet<string> _includes = new HashSet<string>();
@@ -31,45 +42,6 @@ namespace SharpCpp
                 _nestedLevels.Add(@namespace);
             }
 
-            class BuilderId
-            {
-                internal enum BuilderType
-                {
-                    Field, Constructor
-                }
-                
-                YVisibility visibility;
-                BuilderType type;
-
-                internal BuilderId(YVisibility visibility, BuilderType type)
-                {
-                    this.visibility = visibility;
-                    this.type = type;
-                }
-            }
-
-            Dictionary<BuilderId, StringBuilder> _builders = new Dictionary<BuilderId, StringBuilder>();
-
-            // todo aggregate builders as class builders
-
-            StringBuilder _publicFields = new StringBuilder();
-
-            StringBuilder _privateFields = new StringBuilder();
-
-            StringBuilder _contructors = new StringBuilder();
-
-            StringBuilder GetBuilder(YVisibility visibility, BuilderId.BuilderType type)
-            {
-                var id = new BuilderId(visibility, type);
-                if (_builders.ContainsKey(id)) {
-                    return _builders[id];
-                }
-
-                var builder = new StringBuilder();
-                _builders[id] = builder;
-                return builder;
-            }
-
             protected override void Visit(StringBuilder builder, YClass @class)
             {
                 if (!@class.IsNested) {
@@ -82,11 +54,10 @@ namespace SharpCpp
 
                 builder.Append("class " + @class.Name + "{");
 
-                _publicFields.Clear();
-                _privateFields.Clear();
-                _contructors.Clear();
+                ClearBuilders();
 
-                _contructors.Append(@class.Name + "();");
+                GetBuilder(Public, Constructor)
+                    .Append(@class.Name + "();");
 
                 builder.Append(PrivateMark);
                 builder.Append(PublicMark);
@@ -98,10 +69,10 @@ namespace SharpCpp
             {
                 StringBuilder b;
 
-                if (field.Visibility == YVisibility.Public) {
-                    b = _publicFields;
-                } else if (field.Visibility == YVisibility.Private) {
-                    b = _privateFields;
+                if (field.Visibility == Public) {
+                    b = GetBuilder(Public, Field);
+                } else if (field.Visibility == Private) {
+                    b = GetBuilder(Private, Field);
                 } else {
                     throw new TException("Unsupported access");
                 }
@@ -159,19 +130,90 @@ namespace SharpCpp
             {
                 builder.Append("};");
 
-                if (_privateFields.Length > 0) {
-                    builder.Replace(PrivateMark, "private:\n" + _privateFields);
+                var privateFields = GetBuilder(Private, Field);
+
+                if (privateFields.Length > 0) {
+                    builder.Replace(PrivateMark, "private:\n" + privateFields);
                 } else {
                     builder.Replace(PrivateMark, "");
                 }
 
                 // add default constructor
 
+                var publicFields = GetBuilder(Public, Field);
+
                 builder.Replace(PublicMark,
                                  "public:\n" +
-                                 _contructors +
-                                 (_publicFields.Length > 0 ? _publicFields.ToString() : ""));
+                                 GetBuilder(Public, Constructor) +
+                                 (publicFields.Length > 0 ? publicFields.ToString() : ""));
             }
+
+            #region builders functions
+
+            // todo aggregate builders as class builders
+
+            Dictionary<BuilderId, StringBuilder> _builders = new Dictionary<BuilderId, StringBuilder>();
+
+            void ClearBuilders()
+            {
+                _builders.Clear();
+            }
+
+            StringBuilder GetBuilder(YVisibility visibility, BuilderId.BuilderType type)
+            {
+                // Note: a lot of calls to 'new'
+
+                var id = new BuilderId(visibility, type);
+
+                if (_builders.ContainsKey(id)) {
+                    return _builders[id];
+                }
+
+                var builder = new StringBuilder();
+                _builders[id] = builder;
+                return builder;
+            }
+
+            /// Helper class
+            class BuilderId
+            {
+                internal enum BuilderType
+                {
+                    Field, Constructor
+                }
+
+                readonly YVisibility visibility;
+
+                readonly BuilderType type;
+
+                internal BuilderId(YVisibility visibility, BuilderType type)
+                {
+                    this.visibility = visibility;
+                    this.type = type;
+                }
+
+                public override bool Equals(object obj)
+                {
+                    return Equals(obj as BuilderId);
+                }
+
+                public bool Equals(BuilderId builderId)
+                {
+                    return builderId != null && builderId.visibility == visibility && builderId.type == type;
+                }
+
+                public override int GetHashCode()
+                {
+                    int hashCode = 1;
+
+                    hashCode = 37 * hashCode + visibility.GetHashCode();
+                    hashCode = 37 * hashCode + type.GetHashCode();
+
+                    return hashCode;
+                }
+            }
+
+            #endregion
         }
 
         public override UnitWalker CreateUnitWalker(YClass @class)
