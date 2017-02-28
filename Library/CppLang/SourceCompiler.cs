@@ -35,8 +35,8 @@ namespace SharpCpp
             internal protected override void Visit(StringBuilder builder, YNamespace @namespace)
             {
                 builder.Replace(
-                    ConstructorsMark, 
-                    "using namespace " + @namespace.Name + ";\n\n" + ConstructorsMark
+                   ConstructorsMark,
+                   "using namespace " + @namespace.Name + ";\n\n" + ConstructorsMark
                 );
             }
 
@@ -60,13 +60,21 @@ namespace SharpCpp
             {
                 base.Visit(builder, method);
 
-                builder.Append(_typeMapper.ValueOf(method.Signature.ReturnType));
-                builder.Append(" ");
-                builder.Append($"{ Class.Name }::{ method.Name }");
+                if (method.IsPure) {
+                    return;
+                }
 
-                builder.Append("(");
-                builder.Append(_typeMapper.ValueOf(method.Signature.Parameters));
-                builder.Append(")");
+                if (method is YDestructor) {
+                    builder.Append($"{ Class.Name }::~{ Class.Name }()");
+                } else {
+                    builder.Append(_typeMapper.ValueOf(method.Signature.ReturnType));
+                    builder.Append(" ");
+                    builder.Append($"{ Class.Name }::{ method.Name }");
+
+                    builder.Append("(");
+                    builder.Append(_typeMapper.ValueOf(method.Signature.Parameters));
+                    builder.Append(")");
+                }
 
                 builder.AppendEx(method.Body);
             }
@@ -92,7 +100,9 @@ namespace SharpCpp
 
     public static partial class Extensions
     {
-
+        /// <summary>
+        /// Unwrap statement to string.
+        /// </summary>
         static public void AppendEx(this StringBuilder builder, YStatement statement)
         {
             if (statement is YBlock) {
@@ -122,6 +132,9 @@ namespace SharpCpp
             }
         }
 
+        /// <summary>
+        /// Unwrap expression to string.
+        /// </summary>
         static public void AppendEx(this StringBuilder builder, YExpr expr)
         {
             if (expr is YConstExpr) {

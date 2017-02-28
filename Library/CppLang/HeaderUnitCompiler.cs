@@ -109,13 +109,29 @@ namespace SharpCpp
                     throw new TException("Unsupported visibility");
                 }
 
-                b.Append(_typeMapper.ValueOf(method.Signature.ReturnType));
-                b.Append(" ");
-                b.Append(method.Signature.Name);
+                if (method.IsVirtual) {
+                    b.Append("virtual ");
+                }
 
-                b.Append("(");
-                b.Append(_typeMapper.ValueOf(method.Signature.Parameters));
-                b.Append(");");
+                if (method is YDestructor) {
+                    // todo move this declaration to the bottom of the generated file
+
+                    b.Append("~" + Class.Name + "()");
+                } else {
+                    b.Append(_typeMapper.ValueOf(method.Signature.ReturnType));
+                    b.Append(" ");
+                    b.Append(method.Signature.Name);
+
+                    b.Append("(");
+                    b.Append(_typeMapper.ValueOf(method.Signature.Parameters));
+                    b.Append(")");
+                }
+
+                if (method.IsPure) {
+                    b.Append("=0");
+                }
+
+                b.Append(";");
             }
 
             internal protected override void FinalizeBuilder(StringBuilder builder)

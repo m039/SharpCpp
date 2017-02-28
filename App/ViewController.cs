@@ -9,7 +9,7 @@ namespace SharpCpp
 {
     public partial class ViewController : NSViewController
     {
-
+        
         const string CellIdentifier = "FilenameIdentifier";
 
         class TVDataSource : NSTableViewDataSource
@@ -75,6 +75,7 @@ namespace SharpCpp
 
             LabelAboveInputCode.StringValue = "C# goes here";
             LabelAboveListOfGeneratedFiles.StringValue = "List of generated files";
+            LabelAboveGeneratedFileContent.StringValue = "C++ is here";
             InputCode.TextDidChange += OnTextChanged;
             DragAndDropArea.DragAndDropHandler += OnDragAndDrop;
 
@@ -125,9 +126,6 @@ namespace SharpCpp
         {
             try {
                 var files = Transpiler.compileCSharpToCpp(inputCode);
-                if (files.Length > 2) {
-                    throw new Exception("Unsupported");
-                }
 
                 _tvDataSource.files = files;
                 ListOfGeneratedFiles.ReloadData();
@@ -151,11 +149,9 @@ namespace SharpCpp
 
             if (file == null) {
                 _selectedFilename = null;
-                LabelAboveGeneratedFileContent.StringValue = null;
                 GeneratedFileContent.Value = null;
             } else {
                 _selectedFilename = file.ToString();
-                LabelAboveGeneratedFileContent.StringValue = _selectedFilename;
                 GeneratedFileContent.Value = file.Content;
             }
         }

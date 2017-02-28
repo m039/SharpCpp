@@ -3,14 +3,13 @@ namespace SharpCpp
 {
     public class YMethod : YSymbol
     {
-        public override string Name {
-            get {
-                return Signature.Name;
-            }
-            set {
-                Signature.Name = value;
-            }
-        }
+        #region vars
+
+        YStatement _body;
+
+        bool _isVirtual;
+
+        #endregion
 
         public YMethod(string name) : this(name, YType.Void)
         {
@@ -25,12 +24,46 @@ namespace SharpCpp
             Signature = new YFuncSignature(name, returnType, @params);
         }
 
-        public YClass Class;
+        public override string Name {
+            get {
+                return Signature.Name;
+            }
+            set {
+                Signature.Name = value;
+            }
+        }
 
         public YFuncSignature Signature;
 
         public YVisibility Visibility;
 
-        public YStatement Body;
+        public YStatement Body {
+            get {
+                if (IsPure) {
+                    throw new TException("Pure method doesn't have a body");
+                }
+
+                return _body;
+            } 
+            set {
+                _body = value;
+                IsPure = false;
+            }
+        }
+
+        public bool IsPure;
+
+        public bool IsVirtual {
+            get {
+                if (IsPure) {
+                    return true;
+                }
+
+                return _isVirtual;
+            }
+            set {
+                _isVirtual = value;
+            }
+        }
     }
 }

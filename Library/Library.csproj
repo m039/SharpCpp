@@ -88,6 +88,7 @@
     <Compile Include="YLang\Expresions\YMemberAccessExpr.cs" />
     <Compile Include="YLang\Expresions\YThisExpr.cs" />
     <Compile Include="YLang\Expresions\YIdentifierExpr.cs" />
+    <Compile Include="YLang\YDestructor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

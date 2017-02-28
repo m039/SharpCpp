@@ -21,145 +21,8 @@ namespace SharpCpp
                 var @namespace = new YNamespace(inputNamespace.GetName());
                 root.AddChild(@namespace);
 
-                // Classes:
-
-                foreach (var inputClass in inputNamespace.ChildNodes().OfType<ClassDeclarationSyntax>()) {
-                    var className = inputClass.GetName();
-                    if (className == "")
-                        continue;
-
-                    var @class = new YClass(className);
-                    root.AddChild(@class);
-
-                    // todo bug with multiple generation units
-                    if (_generationUnits.Count <= 0) {
-                        _generationUnits.Add(new GenerationUnit(@class));
-                    }
-
-                    // Fields:
-
-                    foreach (var inputField in inputClass.ChildNodes().OfType<FieldDeclarationSyntax>()) {
-                        var declaration = inputField.Declaration;
-                        var declarationType = declaration.Type;
-                        var variables = declaration.Variables;
-
-                        if (variables.Count == 1) {
-                            var variable = variables[0];
-
-                            var field = new YField() {
-                                Type = declarationType.GetYType(),
-                                Name = variable.GetName()
-                            };
-
-                            field.Visibility = inputField.Modifiers.GetYVisibility();
-
-                            // expresions: literal
-
-                            // todo process negative numbers
-
-                            if (variable.Initializer?.Value is LiteralExpressionSyntax) {
-                                var literalExperssion = (LiteralExpressionSyntax)variable.Initializer.Value;
-
-                                if (literalExperssion.Token.Value is int) {
-                                    field.Value = new YConstExpr((int)literalExperssion.Token.Value);
-                                }
-                            }
-
-                            @class.AddChild(field);
-                        } else {
-                            throw new TException("Unsupported");
-                        }
-                    }
-
-                    // Methods:
-
-                    foreach (var inputMethod in inputClass.ChildNodes().OfType<MethodDeclarationSyntax>()) {
-                        var name = inputMethod.Identifier.ToString();
-                        var methodReturnType = inputMethod.ReturnType;
-                        var parameterList = inputMethod.ParameterList;
-                        YMethod method;
-
-                        // Signature:
-
-                        if (parameterList.Parameters.Count() <= 0) {
-                            method = new YMethod(name, inputMethod.ReturnType.GetYType());
-                        } else {
-                            var @params = new List<YParameter>();
-
-                            foreach (var p in parameterList.Parameters) {
-                                @params.Add(new YParameter(p.GetName(), p.Type.GetYType()));
-                            }
-
-                            method = new YMethod(name, inputMethod.ReturnType.GetYType(), @params.ToArray());
-                        }
-
-                        // Body:
-
-                        var block = new YBlock();
-
-                        foreach (var s in inputMethod.Body.Statements) {
-                            if (s is ReturnStatementSyntax) { // return
-                                var returnStatement = (ReturnStatementSyntax)s;
-                                YExpr returnExpression = null;
-
-                                if (returnStatement.Expression is IdentifierNameSyntax) {
-                                    returnExpression = new YIdentifierExpr((IdentifierNameSyntax)returnStatement.Expression);
-                                } else {
-                                    //throw new TUnsupportedException();
-                                }
-
-                                if (returnExpression != null) {
-                                    block.Statements.Add(new YReturn(returnExpression));
-                                }
-
-                            } else if (s is ExpressionStatementSyntax) { // assignment
-                                var expressionStatement = (ExpressionStatementSyntax)s;
-
-                                if (expressionStatement.Expression is AssignmentExpressionSyntax) {
-                                    var assignmentExpression = (AssignmentExpressionSyntax)expressionStatement.Expression;
-
-                                    YExpr left = null;
-
-                                    if (assignmentExpression.Left is MemberAccessExpressionSyntax) {
-                                        var memberAccessExpression = (MemberAccessExpressionSyntax)assignmentExpression.Left;
-
-                                        YExpr expr = null;
-
-                                        if (memberAccessExpression.Expression is ThisExpressionSyntax) {
-                                            expr = YExpr.This;
-                                        }
-
-                                        left = new YMemberAccessExpr(
-                                            expr,
-                                            memberAccessExpression.Name.Identifier.ToString()
-                                        );
-                                    } else if (assignmentExpression.Left is IdentifierNameSyntax) {
-                                        left = new YIdentifierExpr((IdentifierNameSyntax)assignmentExpression.Left);
-                                    }
-
-                                    YExpr right = null;
-
-                                    if (assignmentExpression.Right is IdentifierNameSyntax) {
-                                        right = new YIdentifierExpr((IdentifierNameSyntax)assignmentExpression.Right);
-                                    }
-
-                                    if (left != null && right != null) {
-                                        block.Statements.Add(new YAssign(left, right));
-                                    }
-                                } else {
-                                    //throw new TUnsupportedException();
-                                }
-
-                            } else {
-                                //throw new TUnsupportedException();
-                            }
-                        }
-
-                        method.Visibility = inputMethod.Modifiers.GetYVisibility();
-                        method.Body = block;
-                        @class.AddChild(method);
-                    }
-                }
+                ProcessInterfaces(@namespace, inputNamespace);
+                ProcessClasses(@namespace, inputNamespace);
             }
 
             List<TFile> files = new List<TFile>();
@@ -172,6 +35,202 @@ namespace SharpCpp
 
             return files.ToArray();
         }
+
+        void ProcessInterfaces(YNamespace @namespace, NamespaceDeclarationSyntax inputNamespace)
+        {
+            // Interfaces:
+
+            foreach (var inputInterace in inputNamespace.ChildNodes().OfType<InterfaceDeclarationSyntax>()) {
+                var interfaceName = inputInterace.GetName();
+                if (interfaceName == "")
+                    continue;
+
+                var @interface = new YClass(interfaceName);
+                @namespace.AddChild(@interface);
+
+                _generationUnits.Add(new GenerationUnit(@interface));
+
+                // Methods:
+
+                foreach (var inputMethod in inputInterace.ChildNodes().OfType<MethodDeclarationSyntax>()) {
+                    var name = inputMethod.Identifier.ToString();
+                    var methodReturnType = inputMethod.ReturnType;
+                    var parameterList = inputMethod.ParameterList;
+                    YMethod method;
+
+                    // Signature:
+
+                    if (parameterList.Parameters.Count() <= 0) {
+                        method = new YMethod(name, inputMethod.ReturnType.GetYType());
+                    } else {
+                        var @params = new List<YParameter>();
+
+                        foreach (var p in parameterList.Parameters) {
+                            @params.Add(new YParameter(p.GetName(), p.Type.GetYType()));
+                        }
+
+                        method = new YMethod(name, inputMethod.ReturnType.GetYType(), @params.ToArray());
+                    }
+
+                    // Body:
+
+                    // all methods of an interface are public and pure by default
+                    method.IsPure = true;
+                    method.Visibility = YVisibility.Public;
+                    @interface.AddChild(method);
+                }
+
+                // Misc:
+
+                var destructor = new YDestructor();
+
+                destructor.IsVirtual = true;
+                destructor.Visibility = YVisibility.Public;
+                destructor.Body = new YBlock();
+
+                @interface.AddChild(destructor);
+            }
+        }
+
+        void ProcessClasses(YNamespace @namespace, NamespaceDeclarationSyntax inputNamespace)
+        {
+            // Classes:
+
+            foreach (var inputClass in inputNamespace.ChildNodes().OfType<ClassDeclarationSyntax>()) {
+                var className = inputClass.GetName();
+                if (className == "")
+                    continue;
+
+                var @class = new YClass(className);
+                @namespace.AddChild(@class);
+
+                _generationUnits.Add(new GenerationUnit(@class));
+
+                // Fields:
+
+                foreach (var inputField in inputClass.ChildNodes().OfType<FieldDeclarationSyntax>()) {
+                    var declaration = inputField.Declaration;
+                    var declarationType = declaration.Type;
+                    var variables = declaration.Variables;
+
+                    if (variables.Count == 1) {
+                        var variable = variables[0];
+
+                        var field = new YField() {
+                            Type = declarationType.GetYType(),
+                            Name = variable.GetName()
+                        };
+
+                        field.Visibility = inputField.Modifiers.GetYVisibility();
+
+                        // expresions: literal
+
+                        // todo process negative numbers
+
+                        if (variable.Initializer?.Value is LiteralExpressionSyntax) {
+                            var literalExperssion = (LiteralExpressionSyntax)variable.Initializer.Value;
+
+                            if (literalExperssion.Token.Value is int) {
+                                field.Value = new YConstExpr((int)literalExperssion.Token.Value);
+                            }
+                        }
+
+                        @class.AddChild(field);
+                    } else {
+                        throw new TException("Unsupported");
+                    }
+                }
+
+                // Methods:
+
+                foreach (var inputMethod in inputClass.ChildNodes().OfType<MethodDeclarationSyntax>()) {
+                    var name = inputMethod.Identifier.ToString();
+                    var methodReturnType = inputMethod.ReturnType;
+                    var parameterList = inputMethod.ParameterList;
+                    YMethod method;
+
+                    // Signature:
+
+                    if (parameterList.Parameters.Count() <= 0) {
+                        method = new YMethod(name, inputMethod.ReturnType.GetYType());
+                    } else {
+                        var @params = new List<YParameter>();
+
+                        foreach (var p in parameterList.Parameters) {
+                            @params.Add(new YParameter(p.GetName(), p.Type.GetYType()));
+                        }
+
+                        method = new YMethod(name, inputMethod.ReturnType.GetYType(), @params.ToArray());
+                    }
+
+                    // Body:
+
+                    var block = new YBlock();
+
+                    foreach (var s in inputMethod.Body.Statements) {
+                        if (s is ReturnStatementSyntax) { // return
+                            var returnStatement = (ReturnStatementSyntax)s;
+                            YExpr returnExpression = null;
+
+                            if (returnStatement.Expression is IdentifierNameSyntax) {
+                                returnExpression = new YIdentifierExpr((IdentifierNameSyntax)returnStatement.Expression);
+                            } else {
+                                //throw new TUnsupportedException();
+                            }
+
+                            if (returnExpression != null) {
+                                block.Statements.Add(new YReturn(returnExpression));
+                            }
+
+                        } else if (s is ExpressionStatementSyntax) { // assignment
+                            var expressionStatement = (ExpressionStatementSyntax)s;
+
+                            if (expressionStatement.Expression is AssignmentExpressionSyntax) {
+                                var assignmentExpression = (AssignmentExpressionSyntax)expressionStatement.Expression;
+
+                                YExpr left = null;
+
+                                if (assignmentExpression.Left is MemberAccessExpressionSyntax) {
+                                    var memberAccessExpression = (MemberAccessExpressionSyntax)assignmentExpression.Left;
+
+                                    YExpr expr = null;
+
+                                    if (memberAccessExpression.Expression is ThisExpressionSyntax) {
+                                        expr = YExpr.This;
+                                    }
+
+                                    left = new YMemberAccessExpr(
+                                        expr,
+                                        memberAccessExpression.Name.Identifier.ToString()
+                                    );
+                                } else if (assignmentExpression.Left is IdentifierNameSyntax) {
+                                    left = new YIdentifierExpr((IdentifierNameSyntax)assignmentExpression.Left);
+                                }
+
+                                YExpr right = null;
+
+                                if (assignmentExpression.Right is IdentifierNameSyntax) {
+                                    right = new YIdentifierExpr((IdentifierNameSyntax)assignmentExpression.Right);
+                                }
+
+                                if (left != null && right != null) {
+                                    block.Statements.Add(new YAssign(left, right));
+                                }
+                            } else {
+                                //throw new TUnsupportedException();
+                            }
+
+                        } else {
+                            //throw new TUnsupportedException();
+                        }
+                    }
+
+                    method.Visibility = inputMethod.Modifiers.GetYVisibility();
+                    method.Body = block;
+                    @class.AddChild(method);
+                }
+            }
+        }
     }
 
     static partial class Extensions
@@ -182,6 +241,11 @@ namespace SharpCpp
         }
 
         static public string GetName(this ClassDeclarationSyntax syntax)
+        {
+            return syntax.Identifier.ToString();
+        }
+
+        static public string GetName(this InterfaceDeclarationSyntax syntax)
         {
             return syntax.Identifier.ToString();
         }
