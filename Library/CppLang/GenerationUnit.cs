@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using SharpCpp;
 
 namespace SharpCpp
@@ -7,31 +7,31 @@ namespace SharpCpp
     {
         public readonly YClass Class;
 
-        readonly TFile _header;
+        readonly GeneratedFile _header;
 
-        readonly TFile _source;
+        readonly GeneratedFile _source;
 
         public GenerationUnit(YClass @class)
         {
             Class = @class;
 
-            _header = new TFile {
+            _header = new GeneratedFile {
                 Name = Class.Name,
-                Type = TFile.TFileType.HEADER
+                Type = GeneratedFile.GeneratedFileType.HEADER
             };
 
-            _source = new TFile {
+            _source = new GeneratedFile {
                 Name = Class.Name,
-                Type = TFile.TFileType.SOURCE
+                Type = GeneratedFile.GeneratedFileType.SOURCE
             };
         }
 
-        public TFile GeneratedSourceFile()
+        public GeneratedFile GeneratedSourceFile()
         {
             return _source;
         }
 
-        public TFile GeneratedHeaderFile()
+        public GeneratedFile GeneratedHeaderFile()
         {
             return _header;
         }

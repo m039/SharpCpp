@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Diagnostics;
 using System.Reflection;
@@ -34,7 +34,7 @@ namespace SharpCpp
             _disposed = true;
         }
 
-        public void Prettify(TFile file)
+        public void Prettify(GeneratedFile file)
         {
             if (_disposed)
                 throw new TException("This object was disposed");

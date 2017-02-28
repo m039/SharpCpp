@@ -1,9 +1,9 @@
 ﻿using System;
 namespace SharpCpp
 {
-    public class TFile
+    public class GeneratedFile
     {
-        public enum TFileType
+        public enum GeneratedFileType
         {
             HEADER,
             SOURCE
@@ -11,16 +11,16 @@ namespace SharpCpp
 
         public string Name { get; set; }
 
-        public TFileType Type { get; set; }
+        public GeneratedFileType Type { get; set; }
 
         public string Content { get; set; }
 
         public string FileExtension()
         {
             switch (Type) {
-                case TFileType.HEADER:
+                case GeneratedFileType.HEADER:
                     return "hpp";
-                case TFileType.SOURCE:
+                case GeneratedFileType.SOURCE:
                     return "cpp";
                 default:
                     throw new Exception();

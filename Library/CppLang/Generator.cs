@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.CodeAnalysis;
 using System.Linq;
 using Microsoft.CodeAnalysis.CSharp;
@@ -11,7 +11,7 @@ namespace SharpCpp
     {
         List<GenerationUnit> _generationUnits = new List<GenerationUnit>();
 
-        public TFile[] Generate(SyntaxNode input)
+        public GeneratedFile[] Generate(SyntaxNode input)
         {
             YRoot root = new YRoot();
 
@@ -25,7 +25,7 @@ namespace SharpCpp
                 ProcessClasses(@namespace, inputNamespace);
             }
 
-            List<TFile> files = new List<TFile>();
+            List<GeneratedFile> files = new List<GeneratedFile>();
 
             foreach (var unit in _generationUnits) {
                 unit.Compile(root);

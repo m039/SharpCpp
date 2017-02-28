@@ -1,11 +1,14 @@
-﻿using AppKit;
+using AppKit;
 using Foundation;
 
 namespace SharpCpp
 {
     [Register("AppDelegate")]
-    public class AppDelegate : NSApplicationDelegate
+    public partial class AppDelegate : NSApplicationDelegate
     {
+        
+
+
         public AppDelegate()
         {
         }
@@ -18,6 +21,10 @@ namespace SharpCpp
         public override void WillTerminate(NSNotification notification)
         {
             // Insert code here to tear down your application
+
         }
+
+
+
     }
 }

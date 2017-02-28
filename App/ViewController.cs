@@ -4,25 +4,31 @@ using AppKit;
 using Foundation;
 using ObjCRuntime;
 using System.Linq;
+using System.IO;
 
 namespace SharpCpp
 {
     public partial class ViewController : NSViewController
     {
-        
+
         const string CellIdentifier = "FilenameIdentifier";
 
         class TVDataSource : NSTableViewDataSource
         {
-            internal TFile[] files;
+            internal GeneratedFile[] files;
             internal int selectedPosition = -1;
 
-            public override nint GetRowCount(NSTableView tableView)
+            internal int FilesCount()
             {
                 return files != null? files.Length : 0;
             }
 
-            internal void UpdateSelectedPosition(TFile file)
+            public override nint GetRowCount(NSTableView tableView)
+            {
+                return FilesCount();
+            }
+
+            internal void UpdateSelectedPosition(GeneratedFile file)
             {
                 if (files != null) {
                     for (var i = 0; i < files.Length; i++) {
@@ -35,7 +41,7 @@ namespace SharpCpp
 
                 selectedPosition = -1;
             }
-       }
+        }
 
         class TVDelegate : NSTableViewDelegate
         {
@@ -49,7 +55,7 @@ namespace SharpCpp
 
             public override NSView GetViewForItem(NSTableView tableView, NSTableColumn tableColumn, nint row)
             {
-                ListViewCell cell = (ListViewCell) tableView.MakeView(CellIdentifier, this);
+                ListViewCell cell = (ListViewCell)tableView.MakeView(CellIdentifier, this);
 
                 cell.SetFilename(
                     _dataSource.files[row].ToString(),
@@ -129,12 +135,14 @@ namespace SharpCpp
                 _tvDataSource.files = files;
                 ListOfGeneratedFiles.ReloadData();
 
-                try {
-                    // with same name
-                    UpdateGeneratedFileViews(files.Single((arg) => arg.ToString() == Preferences.LastSelectedFilename));
-                } catch (InvalidOperationException) {
-                    // firs in the list
-                    UpdateGeneratedFileViews(files[0]);
+                if (_tvDataSource.FilesCount() > 0) {
+                    try {
+                        // with same name
+                        UpdateGeneratedFileViews(files.Single((arg) => arg.ToString() == Preferences.LastSelectedFilename));
+                    } catch (InvalidOperationException) {
+                        // firs in the list
+                        UpdateGeneratedFileViews(files[0]);
+                    }
                 }
 
             } catch (TException e) {
@@ -142,7 +150,7 @@ namespace SharpCpp
             }
         }
 
-        void UpdateGeneratedFileViews(TFile file)
+        void UpdateGeneratedFileViews(GeneratedFile file)
         {
             _tvDataSource.UpdateSelectedPosition(file);
 
@@ -166,5 +174,63 @@ namespace SharpCpp
                 // Update the view, if already loaded.
             }
         }
+
+        #region Save Menu Actions
+
+        const int SaveMenuTag = 1;
+
+        const int SaveAsMenuTag = 2;
+
+        [Action("validateMenuItem:")]
+        public bool ValidateMenuItem(NSMenuItem item)
+        {
+            switch (item.Tag) {
+                case SaveMenuTag:
+                    return _tvDataSource.FilesCount() > 0;
+                case SaveAsMenuTag:
+                    return _tvDataSource.FilesCount() > 0;
+            }
+
+            return true;
+        }
+
+        [Export("saveDocument:")]
+        void SaveDocument(NSObject sender)
+        {
+            var lastDirectory = Preferences.LastPickedSaveDirectory;
+            if (lastDirectory == null || !Directory.Exists(lastDirectory)) {
+                Preferences.LastPickedSaveDirectory = null;
+                SaveDocumentAs(sender);
+            } else {
+                PerformSave(lastDirectory);
+            }
+        }
+
+        [Export("saveDocumentAs:")]
+        void SaveDocumentAs(NSObject sender)
+        {
+            var dialog = NSOpenPanel.OpenPanel;
+            dialog.CanChooseFiles = false;
+            dialog.CanChooseDirectories = true;
+
+            if (dialog.RunModal() == 1 && dialog.Urls.Length > 0) {
+                var pickedDirectoryPath = dialog.Urls[0].Path;
+                Preferences.LastPickedSaveDirectory = pickedDirectoryPath;
+                PerformSave(pickedDirectoryPath);
+            }
+        }
+
+        /// <summary>
+        /// Save all generated files to the directory, without any warnings.
+        /// </summary>
+        void PerformSave(string directoryPath)
+        {
+            foreach (var file in _tvDataSource.files) {
+                var filePath = Path.Combine(directoryPath, file.ToString());
+                File.WriteAllText(filePath, file.Content);
+            }
+        }
+
+        #endregion
     }
 }

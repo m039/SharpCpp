@@ -12,6 +12,8 @@ namespace SharpCpp
     {
         public const string AppName = "SharpCppApp";
 
+        #region Database Internals
+
         static readonly DbHelper _dbHelper;
 
         static readonly PreferencesDbHelper _preferencesDbHelper;
@@ -88,7 +90,7 @@ namespace SharpCpp
                 using (var connection = _dbHelper.CreateDbConnection()) {
                     connection.Open();
 
-                    // insert or ignore
+                    // try to insert
 
                     using (var command = connection.CreateCommand()) {
                         command.CommandText = $"INSERT OR IGNORE INTO [{TableName}] ({IdColumn}, {ValueColumn}) " +
@@ -152,6 +154,8 @@ namespace SharpCpp
             }
         }
 
+        #endregion
+
         #region LastSelectedFilename
 
         const string LastSelectedFilenameKey = "last_selected_filename";
@@ -178,5 +182,19 @@ namespace SharpCpp
 
         #endregion
 
+        #region LastSelectedSaveDirectory
+
+        const string LastPickedSaveDirectoryKey = "last_picked_save_directory";
+
+        public static string LastPickedSaveDirectory {
+            get {
+                return _preferencesDbHelper.GetValue(LastPickedSaveDirectoryKey);
+            }
+            set {
+                _preferencesDbHelper.PutValue(LastPickedSaveDirectoryKey, value);
+            }
+        }
+
+        #endregion
     }
 }
