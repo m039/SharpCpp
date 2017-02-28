@@ -65,7 +65,6 @@ namespace SharpCpp
         }
 
         TVDataSource _tvDataSource;
-        string _selectedFilename;
 
         public override void ViewDidLoad()
         {
@@ -132,7 +131,7 @@ namespace SharpCpp
 
                 try {
                     // with same name
-                    UpdateGeneratedFileViews(files.Single((arg) => arg.ToString() == _selectedFilename));
+                    UpdateGeneratedFileViews(files.Single((arg) => arg.ToString() == Preferences.LastSelectedFilename));
                 } catch (InvalidOperationException) {
                     // firs in the list
                     UpdateGeneratedFileViews(files[0]);
@@ -148,10 +147,10 @@ namespace SharpCpp
             _tvDataSource.UpdateSelectedPosition(file);
 
             if (file == null) {
-                _selectedFilename = null;
+                Preferences.LastSelectedFilename = null;
                 GeneratedFileContent.Value = null;
             } else {
-                _selectedFilename = file.ToString();
+                Preferences.LastSelectedFilename = file.ToString();
                 GeneratedFileContent.Value = file.Content;
             }
         }
