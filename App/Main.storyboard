@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
     <dependencies>
+        <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11762"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
         <capability name="stacking Non-gravity area distributions on NSStackView" minToolsVersion="7.0" minSystemVersion="10.11"/>
@@ -198,11 +199,7 @@
                                                             <action selector="performFindPanelAction:" target="Ady-hI-5gd" id="U76-nv-p5D"/>
                                                         </connections>
                                                     </menuItem>
-                                                    <menuItem title="Jump to Selection" keyEquivalent="j" id="S0p-oC-mLd">
-                                                        <connections>
-                                                            <action selector="centerSelectionInVisibleArea:" target="Ady-hI-5gd" id="IOG-6D-g5B"/>
-                                                        </connections>
-                                                    </menuItem>
+                                                    <menuItem title="Jump to Selection" keyEquivalent="j" id="S0p-oC-mLd"/>
                                                 </items>
                                             </menu>
                                         </menuItem>
@@ -310,9 +307,6 @@
                                                     </menuItem>
                                                     <menuItem title="Capitalize" id="UEZ-Bs-lqG">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
-                                                        <connections>
-                                                            <action selector="capitalizeWord:" target="Ady-hI-5gd" id="26H-TL-nsh"/>
-                                                        </connections>
                                                     </menuItem>
                                                 </items>
                                             </menu>
@@ -694,7 +688,7 @@
                                                     <rect key="frame" x="1" y="1" width="276.5" height="392"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
-                                                        <textView importsGraphics="NO" usesFontPanel="YES" findStyle="panel" continuousSpellChecking="YES" allowsUndo="YES" usesRuler="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" dashSubstitution="YES" smartInsertDelete="YES" id="kQr-kT-zaj" customClass="EditTextView">
+                                                        <textView importsGraphics="NO" usesFontPanel="YES" findStyle="panel" continuousSpellChecking="YES" allowsCharacterPickerTouchBarItem="NO" allowsUndo="YES" usesRuler="YES" allowsNonContiguousLayout="YES" textCompletion="NO" id="kQr-kT-zaj" customClass="EditTextView">
                                                             <rect key="frame" x="0.0" y="0.0" width="276.5" height="392"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -731,7 +725,7 @@
                                     <stackView distribution="fill" orientation="vertical" alignment="leading" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BwI-o6-jaG">
                                         <rect key="frame" x="286.5" y="0.0" width="279" height="419"/>
                                         <subviews>
-                                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EQo-d9-bli">
+                                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EQo-d9-bli" userLabel="Label Above List Of Generated Files">
                                                 <rect key="frame" x="-2" y="402" width="283" height="17"/>
                                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" placeholderString="" id="wzv-GH-rPx">
                                                     <font key="font" metaFont="system"/>
@@ -739,36 +733,74 @@
                                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                 </textFieldCell>
                                             </textField>
-                                            <scrollView wantsLayer="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BAj-KJ-ihl">
+                                            <scrollView wantsLayer="YES" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MCz-0A-dgi">
                                                 <rect key="frame" x="0.0" y="0.0" width="279" height="394"/>
-                                                <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="lMo-ng-I7N">
+                                                <clipView key="contentView" id="D7d-h9-p6F">
                                                     <rect key="frame" x="1" y="1" width="277" height="392"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
-                                                        <textView importsGraphics="NO" usesFontPanel="YES" findStyle="panel" continuousSpellChecking="YES" allowsUndo="YES" usesRuler="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" dashSubstitution="YES" smartInsertDelete="YES" id="EWK-vo-GQS" customClass="EditTextView">
-                                                            <rect key="frame" x="0.0" y="1" width="277" height="392"/>
-                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                            <size key="minSize" width="277" height="392"/>
-                                                            <size key="maxSize" width="463" height="10000000"/>
-                                                            <color key="insertionPointColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                        </textView>
+                                                        <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" viewBased="YES" id="Lgu-L8-VmG" userLabel="List Of Generated Files">
+                                                            <rect key="frame" x="0.0" y="0.0" width="277" height="392"/>
+                                                            <autoresizingMask key="autoresizingMask"/>
+                                                            <size key="intercellSpacing" width="3" height="2"/>
+                                                            <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                            <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
+                                                            <tableColumns>
+                                                                <tableColumn width="116" minWidth="40" maxWidth="1000" id="3ZR-NR-n4G">
+                                                                    <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border">
+                                                                        <font key="font" metaFont="smallSystem"/>
+                                                                        <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
+                                                                        <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
+                                                                    </tableHeaderCell>
+                                                                    <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" title="Text Cell" id="jaL-2L-kxf">
+                                                                        <font key="font" metaFont="system"/>
+                                                                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                                        <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                                    </textFieldCell>
+                                                                    <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
+                                                                    <prototypeCellViews>
+                                                                        <tableCellView id="pJd-hr-X0N">
+                                                                            <rect key="frame" x="1" y="1" width="116" height="17"/>
+                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                                            <subviews>
+                                                                                <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KaF-Gb-M1r">
+                                                                                    <rect key="frame" x="0.0" y="0.0" width="116" height="17"/>
+                                                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                                                                    <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="0Wh-eE-z9B">
+                                                                                        <font key="font" metaFont="system"/>
+                                                                                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                                                    </textFieldCell>
+                                                                                </textField>
+                                                                            </subviews>
+                                                                            <connections>
+                                                                                <outlet property="textField" destination="KaF-Gb-M1r" id="kTE-7I-gog"/>
+                                                                            </connections>
+                                                                        </tableCellView>
+                                                                    </prototypeCellViews>
+                                                                </tableColumn>
+                                                            </tableColumns>
+                                                            <connections>
+                                                                <action selector="OnAction:" target="XfG-lQ-9wD" id="b4R-as-kXK"/>
+                                                            </connections>
+                                                        </tableView>
                                                     </subviews>
-                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 </clipView>
-                                                <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="YES" id="KSp-tQ-mrf">
-                                                    <rect key="frame" x="-100" y="-100" width="87" height="18"/>
+                                                <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="p9N-Bw-eOL">
+                                                    <rect key="frame" x="1" y="119" width="223" height="15"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                 </scroller>
-                                                <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="5jl-zr-7Br">
-                                                    <rect key="frame" x="262" y="1" width="16" height="392"/>
+                                                <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="teO-Ym-1Tg">
+                                                    <rect key="frame" x="224" y="17" width="15" height="102"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                 </scroller>
                                             </scrollView>
                                         </subviews>
                                         <constraints>
                                             <constraint firstItem="EQo-d9-bli" firstAttribute="leading" secondItem="BwI-o6-jaG" secondAttribute="leading" id="2WS-Us-yun"/>
+                                            <constraint firstItem="MCz-0A-dgi" firstAttribute="leading" secondItem="BwI-o6-jaG" secondAttribute="leading" id="Vzh-WK-JzP"/>
                                             <constraint firstAttribute="trailing" secondItem="EQo-d9-bli" secondAttribute="trailing" id="aA0-G6-qMh"/>
+                                            <constraint firstAttribute="trailing" secondItem="MCz-0A-dgi" secondAttribute="trailing" id="rLF-YL-3Rd"/>
                                         </constraints>
                                         <visibilityPriorities>
                                             <integer value="1000"/>
@@ -782,7 +814,7 @@
                                     <stackView distribution="fill" orientation="vertical" alignment="leading" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="C9J-nG-lRg">
                                         <rect key="frame" x="573.5" y="0.0" width="278.5" height="419"/>
                                         <subviews>
-                                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wtr-Ea-gO7">
+                                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wtr-Ea-gO7" userLabel="Label Above Generated File Content">
                                                 <rect key="frame" x="-2" y="402" width="282.5" height="17"/>
                                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" id="35G-17-cbk">
                                                     <font key="font" metaFont="system"/>
@@ -796,7 +828,7 @@
                                                     <rect key="frame" x="1" y="1" width="276.5" height="392"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
-                                                        <textView importsGraphics="NO" usesFontPanel="YES" findStyle="panel" continuousSpellChecking="YES" allowsUndo="YES" usesRuler="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" dashSubstitution="YES" smartInsertDelete="YES" id="0wm-Yr-Wnq" customClass="EditTextView">
+                                                        <textView importsGraphics="NO" usesFontPanel="YES" findStyle="panel" continuousSpellChecking="YES" allowsCharacterPickerTouchBarItem="NO" allowsUndo="YES" usesRuler="YES" allowsNonContiguousLayout="YES" textCompletion="NO" id="0wm-Yr-Wnq" userLabel="Generated File Content" customClass="EditTextView">
                                                             <rect key="frame" x="0.0" y="1" width="276.5" height="392"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -858,14 +890,13 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="DragAnDropView" destination="w6x-WP-ceC" id="G22-xV-quU"/>
                         <outlet property="DragAndDropArea" destination="w6x-WP-ceC" id="OAF-XG-PaY"/>
-                        <outlet property="GeneratedBody" destination="0wm-Yr-Wnq" id="pgM-nW-F1H"/>
-                        <outlet property="GeneratedHeader" destination="EWK-vo-GQS" id="qI2-Cm-V8B"/>
+                        <outlet property="GeneratedFileContent" destination="0wm-Yr-Wnq" id="9zs-0n-eCI"/>
                         <outlet property="InputCode" destination="kQr-kT-zaj" id="gxO-iU-qQc"/>
-                        <outlet property="LabelAboveGeneratedBody" destination="Wtr-Ea-gO7" id="sjc-0e-fNy"/>
-                        <outlet property="LabelAboveGeneratedHeader" destination="EQo-d9-bli" id="flj-9o-qXp"/>
+                        <outlet property="LabelAboveGeneratedFileContent" destination="Wtr-Ea-gO7" id="pCp-qP-5x2"/>
                         <outlet property="LabelAboveInputCode" destination="b9C-hX-Bis" id="Qoa-gh-fWy"/>
+                        <outlet property="LabelAboveListOfGeneratedFiles" destination="EQo-d9-bli" id="VjF-yv-AcS"/>
+                        <outlet property="ListOfGeneratedFiles" destination="Lgu-L8-VmG" id="Ssw-8M-3FK"/>
                     </connections>
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>

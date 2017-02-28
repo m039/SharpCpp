@@ -92,11 +92,16 @@
       <DependentUpon>EditTextView.cs</DependentUpon>
     </Compile>
     <Compile Include="TestData.cs" />
+    <Compile Include="ListViewCell.cs" />
+    <Compile Include="ListViewCell.designer.cs">
+      <DependentUpon>ListViewCell.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Main.storyboard" />
     <InterfaceDefinition Include="DragAndDropView.xib" />
     <InterfaceDefinition Include="EditTextView.xib" />
+    <InterfaceDefinition Include="ListViewCell.xib" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Library\Library.csproj">

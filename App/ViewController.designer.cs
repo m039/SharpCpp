@@ -16,22 +16,25 @@ namespace SharpCpp
 		SharpCpp.DragAndDropView DragAndDropArea { get; set; }
 
 		[Outlet]
-		AppKit.NSTextView GeneratedBody { get; set; }
+		SharpCpp.EditTextView GeneratedFileContent { get; set; }
 
 		[Outlet]
-		AppKit.NSTextView GeneratedHeader { get; set; }
+		SharpCpp.EditTextView InputCode { get; set; }
 
 		[Outlet]
-		AppKit.NSTextView InputCode { get; set; }
-
-		[Outlet]
-		AppKit.NSTextField LabelAboveGeneratedBody { get; set; }
-
-		[Outlet]
-		AppKit.NSTextField LabelAboveGeneratedHeader { get; set; }
+		AppKit.NSTextField LabelAboveGeneratedFileContent { get; set; }
 
 		[Outlet]
 		AppKit.NSTextField LabelAboveInputCode { get; set; }
+
+		[Outlet]
+		AppKit.NSTextField LabelAboveListOfGeneratedFiles { get; set; }
+
+		[Outlet]
+		AppKit.NSTableView ListOfGeneratedFiles { get; set; }
+
+		[Action ("OnAction:")]
+		partial void OnAction (AppKit.NSTableView sender);
 		
 		void ReleaseDesignerOutlets ()
 		{
@@ -40,14 +43,9 @@ namespace SharpCpp
 				DragAndDropArea = null;
 			}
 
-			if (GeneratedBody != null) {
-				GeneratedBody.Dispose ();
-				GeneratedBody = null;
-			}
-
-			if (GeneratedHeader != null) {
-				GeneratedHeader.Dispose ();
-				GeneratedHeader = null;
+			if (GeneratedFileContent != null) {
+				GeneratedFileContent.Dispose ();
+				GeneratedFileContent = null;
 			}
 
 			if (InputCode != null) {
@@ -55,19 +53,24 @@ namespace SharpCpp
 				InputCode = null;
 			}
 
-			if (LabelAboveGeneratedBody != null) {
-				LabelAboveGeneratedBody.Dispose ();
-				LabelAboveGeneratedBody = null;
-			}
-
-			if (LabelAboveGeneratedHeader != null) {
-				LabelAboveGeneratedHeader.Dispose ();
-				LabelAboveGeneratedHeader = null;
+			if (LabelAboveGeneratedFileContent != null) {
+				LabelAboveGeneratedFileContent.Dispose ();
+				LabelAboveGeneratedFileContent = null;
 			}
 
 			if (LabelAboveInputCode != null) {
 				LabelAboveInputCode.Dispose ();
 				LabelAboveInputCode = null;
+			}
+
+			if (LabelAboveListOfGeneratedFiles != null) {
+				LabelAboveListOfGeneratedFiles.Dispose ();
+				LabelAboveListOfGeneratedFiles = null;
+			}
+
+			if (ListOfGeneratedFiles != null) {
+				ListOfGeneratedFiles.Dispose ();
+				ListOfGeneratedFiles = null;
 			}
 		}
 	}

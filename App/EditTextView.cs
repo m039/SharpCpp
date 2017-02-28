@@ -34,12 +34,17 @@ namespace SharpCpp
 
         #endregion
 
+        public override void MouseDown(NSEvent theEvent)
+        {
+            base.MouseDown(theEvent);
+
+            Window.MakeFirstResponder(this);
+        }
+
 #if true
         public override void AwakeFromNib()
         {
             base.AwakeFromNib();
-
-            UnregisterDraggedTypes();
         }
 
         public override string[] RegisteredDragTypes()
