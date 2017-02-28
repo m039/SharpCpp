@@ -6,12 +6,6 @@ namespace SharpCpp
     [Register("AppDelegate")]
     public partial class AppDelegate : NSApplicationDelegate
     {
-        
-
-
-        public AppDelegate()
-        {
-        }
 
         public override void DidFinishLaunching(NSNotification notification)
         {
@@ -23,8 +17,6 @@ namespace SharpCpp
             // Insert code here to tear down your application
 
         }
-
-
 
     }
 }

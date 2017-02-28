@@ -74,7 +74,7 @@ namespace SharpCpp
 
                         using (var reader = command.ExecuteReader()) {
                             while (reader.Read()) {
-                                value = (string)reader[0];
+                                value = reader[0] as string;
                             }
                         }
                     }

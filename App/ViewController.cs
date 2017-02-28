@@ -140,13 +140,17 @@ namespace SharpCpp
                         // with same name
                         UpdateGeneratedFileViews(files.Single((arg) => arg.ToString() == Preferences.LastSelectedFilename));
                     } catch (InvalidOperationException) {
-                        // firs in the list
+                        // first in the list
                         UpdateGeneratedFileViews(files[0]);
                     }
                 }
 
             } catch (TException e) {
                 Console.WriteLine(e);
+
+                _tvDataSource.files = null;
+                ListOfGeneratedFiles.ReloadData();
+                UpdateGeneratedFileViews(null);
             }
         }
 
@@ -156,7 +160,7 @@ namespace SharpCpp
 
             if (file == null) {
                 Preferences.LastSelectedFilename = null;
-                GeneratedFileContent.Value = null;
+                GeneratedFileContent.Value = "";
             } else {
                 Preferences.LastSelectedFilename = file.ToString();
                 GeneratedFileContent.Value = file.Content;
