@@ -1,8 +1,8 @@
-# CSharpCpp
+# SharpCpp
 
-CSharpCpp is from C# to C++ transpiler/code-generator. Currently only [XLIS](https://github.com/m039/XLIS)'s FooBar example is working and nothing else.
+SharpCpp is a transpiler that generates C++ code from C#. Currently only [XLIS](https://github.com/m039/XLIS)'s FooBar example is working and nothing else.
 
-_It is a prototype, future of the project is unknown._
+_It is just a raw idea, future of the project is unknown._
 
 # Usage
 * You can use MacOS Application to test functionality, there are no other options for now.
