@@ -136,10 +136,10 @@ namespace SharpCpp
 
                 builder.Append("if (");
                 AppendEx(builder, @if.Condition);
-                builder.Append(") ");
+                builder.Append(")");
                 AppendEx(builder, @if.Statement);
                 if (@if.ElseStatement != null) {
-                    builder.Append(" else ");
+                    builder.Append("else");
                     AppendEx(builder, @if.ElseStatement);
                 }
             }
