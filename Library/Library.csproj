@@ -78,19 +78,20 @@
     <Compile Include="YLang\YParameter.cs" />
     <Compile Include="YLang\Statements\YBlock.cs" />
     <Compile Include="YLang\Statements\YVar.cs" />
-    <Compile Include="YLang\Statements\YAssign.cs" />
     <Compile Include="YLang\Expresions\YMemberAccessExpr.cs" />
     <Compile Include="YLang\Expresions\YThisExpr.cs" />
     <Compile Include="YLang\Expresions\YIdentifierExpr.cs" />
     <Compile Include="YLang\YDestructor.cs" />
     <Compile Include="TUnsupportedException.cs" />
     <Compile Include="YLang\Types\YRefType.cs" />
-    <Compile Include="YLang\Operations\YOperator.cs" />
     <Compile Include="YLang\Statements\YIf.cs" />
     <Compile Include="YLang\Expresions\YBinaryExpr.cs" />
     <Compile Include="YLang\Expresions\YLiteralExpr.cs" />
     <Compile Include="YLang\Expresions\YPrefixUnaryExpr.cs" />
     <Compile Include="YLang\Expresions\YInvocation.cs" />
+    <Compile Include="YLang\YOperator.cs" />
+    <Compile Include="YLang\Statements\YExprStatement.cs" />
+    <Compile Include="YLang\Expresions\YAssign.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -101,7 +102,6 @@
     <Folder Include="YLang\Expresions\" />
     <Folder Include="YLang\Types\" />
     <Folder Include="YLang\Statements\" />
-    <Folder Include="YLang\Operations\" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Configs\uncrustify.cfg" />

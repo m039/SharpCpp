@@ -7,7 +7,7 @@ namespace SharpCpp
 
         public static readonly YOperator Minus = new YOperator();
 
-        private YOperator()
+        YOperator()
         {
         }
     }

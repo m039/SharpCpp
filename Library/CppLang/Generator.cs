@@ -172,7 +172,7 @@ namespace SharpCpp
             }
         }
 
-        // todo here could be generics or reflection
+        // todo good place to use generics or reflection
 
         YStatement ProcessStatement(StatementSyntax statement)
         {
@@ -205,6 +205,8 @@ namespace SharpCpp
                 return ProcessExpr((MemberAccessExpressionSyntax)expr);
             } else if (expr is ThisExpressionSyntax) {
                 return ProcessExpr((ThisExpressionSyntax)expr);
+            } else if (expr is AssignmentExpressionSyntax) {
+                return ProcessExpr((AssignmentExpressionSyntax)expr);
             }
 
             throw new TException("Unable to process expression");
@@ -220,7 +222,7 @@ namespace SharpCpp
             if (expr.Token.IsKind(SyntaxKind.NullKeyword)) {
                 return YLiteralExpr.Null;
             } else if (expr.Token.IsKind(SyntaxKind.NumericLiteralToken)) {
-                return new YLiteralExpr(expr.Token.Value); // looks same as YConstExpr
+                return new YLiteralExpr(expr.Token.Value); // Looks like YConstExpr, wtf?!
             }
 
             throw new TException("Unable to process expr");
@@ -267,17 +269,21 @@ namespace SharpCpp
             return new YBinaryExpr(left, right, operation);
         }
 
+        YExpr ProcessExpr(AssignmentExpressionSyntax assignmentExpression)
+        {
+            YExpr left = ProcessExpr(assignmentExpression.Left);
+            YExpr right = ProcessExpr(assignmentExpression.Right);
+
+            return new YAssign(left, right);
+        }
+
         YStatement ProcessStatement(IfStatementSyntax ifStatement)
         {
             YExpr condition = ProcessExpr(ifStatement.Condition);
             YStatement statement = ProcessStatement(ifStatement.Statement);
             YStatement elseStatement = ProcessStatement(ifStatement.Else.Statement);
 
-            if (condition != null && statement != null) {
-                return new YIf(condition, statement, elseStatement);
-            }
-
-            throw new TException("Unable to process statement");
+            return new YIf(condition, statement, elseStatement);
         }
 
         YStatement ProcessStatement(ReturnStatementSyntax statement)
@@ -298,18 +304,7 @@ namespace SharpCpp
 
         YStatement ProcessStatement(ExpressionStatementSyntax statement)
         {
-            if (statement.Expression is AssignmentExpressionSyntax) { // ?!
-                var assignmentExpression = (AssignmentExpressionSyntax)statement.Expression;
-
-                YExpr left = ProcessExpr(assignmentExpression.Left);
-                YExpr right = ProcessExpr(assignmentExpression.Right);
-                             
-                if (left != null && right != null) {
-                    return new YAssign(left, right); // expression or statement?!
-                }
-            }
-
-            throw new TException("Unable to process statement");
+            return new YExprStatement(ProcessExpr(statement.Expression));
         }
       
         YOperator ProcessOperator(SyntaxToken token)

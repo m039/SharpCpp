@@ -7,15 +7,15 @@ namespace SharpCpp
 {
     public class Prettifier : IDisposable
     {
-        private const string UncrustifyCommandName = "uncrustify";
+        const string UncrustifyCommandName = "uncrustify";
 
-        private const string UncrustifyConfigId = "SharpCpp.Configs.uncrustify.cfg";
+        const string UncrustifyConfigId = "SharpCpp.Configs.uncrustify.cfg";
 
-        private readonly string _uncrustifyFileName;
+        readonly string _uncrustifyFileName;
 
-        private readonly string _uncrustifyConfigFileName;
+        readonly string _uncrustifyConfigFileName;
 
-        private bool _disposed = false;
+        bool _disposed = false;
 
         public Prettifier()
         {

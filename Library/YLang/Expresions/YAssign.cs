@@ -1,7 +1,7 @@
 ﻿using System;
 namespace SharpCpp
 {
-    public class YAssign : YStatement
+    public class YAssign : YExpr
     {
         public YExpr Left;
         public YExpr Right;

@@ -124,13 +124,11 @@ namespace SharpCpp
                 AppendEx(builder, @return.Value);
                 builder.Append(";");
 
-            } else if (statement is YAssign) {
-                var assign = (YAssign)statement;
+            } else if (statement is YExprStatement) {
 
-                AppendEx(builder, assign.Left);
-                builder.Append("=");
-                AppendEx(builder, assign.Right);
+                AppendEx(builder, ((YExprStatement)statement).Expression);
                 builder.Append(";");
+
             } else if (statement is YIf) {
                 var @if = (YIf)statement;
 
@@ -189,6 +187,12 @@ namespace SharpCpp
 
                 // no arguments
                 builder.Append("()");
+            } else if (expr is YAssign) {
+                var assign = (YAssign)expr;
+
+                AppendEx(builder, assign.Left);
+                builder.Append("=");
+                AppendEx(builder, assign.Right);
             }
         }
 
