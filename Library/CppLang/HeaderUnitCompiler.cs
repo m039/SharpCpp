@@ -29,8 +29,8 @@ namespace SharpCpp
 
             TypeMapper _typeMapper;
 
-            public HeaderWalker(YClass @class) : base(@class) { 
-                _typeMapper = new TypeMapper(_includes);
+            public HeaderWalker(YClass @class, TypeMapper.IncludeFinder finder) : base(@class, finder) { 
+                _typeMapper = new TypeMapper(finder, _includes);
             }
 
             internal protected override void InitBuilder(StringBuilder builder)
@@ -256,9 +256,9 @@ namespace SharpCpp
             #endregion
         }
 
-        public override UnitWalker CreateUnitWalker(YClass @class)
+        public override UnitWalker CreateUnitWalker(YClass @class, TypeMapper.IncludeFinder finder)
         {
-            return new HeaderWalker(@class);
+            return new HeaderWalker(@class, finder);
         }
     }
 }

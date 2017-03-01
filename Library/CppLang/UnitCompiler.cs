@@ -66,6 +66,41 @@ namespace SharpCpp
             #endregion
         }
 
+        class UnitInlucdeFinder : TypeMapper.IncludeFinder
+        {
+            YRoot _root;
+
+            public UnitInlucdeFinder(YRoot root)
+            {
+                _root = root;
+            }
+
+            public string FindInclude(string type)
+            {
+                // No check for accessibility: if the type is visible from the specific class or not.
+
+                switch (type) {
+                    case "int32_t":
+                        return "<cstdint>";
+                    default:
+                        // only search in namespaces deep in one level
+
+                        foreach (var rootNode in _root.Nodes) {
+                            if (rootNode is YNamespace) {
+                                foreach (var namespaceNode in rootNode.Nodes) {
+                                    var @class = namespaceNode as YClass;
+                                    if (@class?.Name == type) {
+                                        return "\"" + @class.Name + ".hpp\"";
+                                    }
+                                }
+                            }
+                        }
+
+                        throw new TUnsupportedException();
+                }
+            }
+        }
+
         public class UnitWalker
         {
             protected const string PublicMark = "{{public}}";
@@ -78,9 +113,12 @@ namespace SharpCpp
 
             internal protected YClass Class;
 
-            protected UnitWalker(YClass @class)
+            protected TypeMapper.IncludeFinder IncludeFinder;
+
+            protected UnitWalker(YClass @class, TypeMapper.IncludeFinder finder)
             {
                 Class = @class;
+                IncludeFinder = finder;
             }
 
             internal protected virtual void InitBuilder(StringBuilder builder) { }
@@ -103,7 +141,7 @@ namespace SharpCpp
 
         public string Compile(YRoot root, GenerationUnit unit)
         {
-            var walker = CreateUnitWalker(unit.Class);
+            var walker = CreateUnitWalker(unit.Class, new UnitInlucdeFinder(root));
             var walkerAdapter = new YSyntaxWalkerAdapter(walker);
 
             walkerAdapter.Walk(root);
@@ -111,6 +149,6 @@ namespace SharpCpp
             return walker.GeneratedText();
         }
 
-        public abstract UnitWalker CreateUnitWalker(YClass @class);
+        public abstract UnitWalker CreateUnitWalker(YClass @class, TypeMapper.IncludeFinder finder);
     }
 }

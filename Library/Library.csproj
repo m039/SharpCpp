@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-
+﻿<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -10,7 +8,6 @@
     <AssemblyName>Library</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
-
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
@@ -21,7 +18,6 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
   </PropertyGroup>
-
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
     <OutputPath>bin\Release</OutputPath>
@@ -62,7 +58,6 @@
     <Compile Include="Prettifier.cs" />
     <Compile Include="FileUtils.cs" />
     <Compile Include="TFatalException.cs" />
-    <Compile Include="YLang\YSymbolTable.cs" />
     <Compile Include="YLang\YVisibility.cs" />
     <Compile Include="YLang\Expresions\YConstExpr.cs" />
     <Compile Include="YLang\Expresions\YExpr.cs" />
@@ -82,13 +77,14 @@
     <Compile Include="CppLang\TypeMapper.cs" />
     <Compile Include="YLang\YParameter.cs" />
     <Compile Include="YLang\Statements\YBlock.cs" />
-    <Compile Include="YLang\TUnsupportedException.cs" />
     <Compile Include="YLang\Statements\YVar.cs" />
     <Compile Include="YLang\Statements\YAssign.cs" />
     <Compile Include="YLang\Expresions\YMemberAccessExpr.cs" />
     <Compile Include="YLang\Expresions\YThisExpr.cs" />
     <Compile Include="YLang\Expresions\YIdentifierExpr.cs" />
     <Compile Include="YLang\YDestructor.cs" />
+    <Compile Include="TUnsupportedException.cs" />
+    <Compile Include="YLang\Types\YRefType.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -10,13 +10,15 @@ namespace SharpCpp
         {
             protected const string ConstructorsMark = "{{constructors}}";
 
-            public SourceWalker(YClass @class) : base(@class) { }
-
             StringBuilder _constructor = new StringBuilder();
 
             bool _constructorInited;
 
-            TypeMapper _typeMapper = new TypeMapper(new HashSet<string>()); // ignore includes for now
+            readonly TypeMapper _typeMapper;
+
+            public SourceWalker(YClass @class, TypeMapper.IncludeFinder finder) : base(@class, finder) {
+                _typeMapper = new TypeMapper(finder, new HashSet<string>()); // ignore includes for now
+            }
 
             internal protected override void InitBuilder(StringBuilder builder)
             {
@@ -92,9 +94,9 @@ namespace SharpCpp
             }
         }
 
-        public override UnitWalker CreateUnitWalker(YClass @class)
+        public override UnitWalker CreateUnitWalker(YClass @class, TypeMapper.IncludeFinder finder)
         {
-            return new SourceWalker(@class);
+            return new SourceWalker(@class, finder);
         }
     }
 

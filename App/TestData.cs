@@ -63,7 +63,6 @@ namespace SharpCpp
     {
         private IBar impl;
 
-        /*
         public void Register(IBar ibar)
         {
             this.impl = ibar;
@@ -80,7 +79,6 @@ namespace SharpCpp
                 return impl.GetNumber();
             }
         }
-        */
     }
 
     public interface IBar

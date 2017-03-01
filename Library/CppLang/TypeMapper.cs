@@ -6,23 +6,47 @@ namespace SharpCpp
 {
     public class TypeMapper
     {
-        ISet<string> _includes;
-
-        internal TypeMapper(ISet<string> includes)
+        public interface IncludeFinder
         {
-            _includes = includes;
+            string FindInclude(string type);
+        }
+
+        ISet<string> _includes;
+        IncludeFinder _includeFinder;
+
+        internal TypeMapper(IncludeFinder includeFinder, ISet<string> includes)
+        {
+            this._includes = includes;
+            this._includeFinder = includeFinder;
         }
 
         public string ValueOf(YType type)
         {
+            string include;
+
             if (type == YType.Int) {
-                _includes.Add("<cstdint>");
-                return "int32_t";
+                include = _includeFinder.FindInclude("int32_t");
+                if (include != null) {
+                    _includes.Add(include);
+                    return "int32_t";
+                }
+
+                return "int";
             } else if (type == YType.Void) {
                 return "void";
-            } else {
-                throw new TException("Unsupported type");
+            } else if (type is YRefType) {
+                var name = ((YRefType)type).Name;
+
+                include = _includeFinder.FindInclude(name);
+                if (include != null) {
+                    _includes.Add(include);
+                    return $"std::shared_ptr<{name}>";
+                }
+
+                throw new TException("Can't find include for referenced type");
             }
+
+            throw new TException("Unsupported type");
         }
 
         public string ValueOf(YParameter @var)

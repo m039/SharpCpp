@@ -260,6 +260,11 @@ namespace SharpCpp
             return syntax.Identifier.ToString();
         }
 
+        static public string GetName(this IdentifierNameSyntax syntax)
+        {
+            return syntax.Identifier.ToString();
+        }
+
         static public YVisibility GetYVisibility(this SyntaxTokenList modifiers)
         {
             if (modifiers.Any(SyntaxKind.PublicKeyword)) {
@@ -279,6 +284,11 @@ namespace SharpCpp
                 } else if (predefinedTypeKeywoard.IsKind(SyntaxKind.VoidKeyword)) {
                     return YType.Void;
                 }
+            } else if (typeSyntax.IsKind(SyntaxKind.IdentifierName)) {
+                var identifierToken = (IdentifierNameSyntax)typeSyntax;
+
+                // other types are references.. for now
+                return new YRefType(identifierToken.GetName());
             }
 
             throw new TException("Unsupported return type");
