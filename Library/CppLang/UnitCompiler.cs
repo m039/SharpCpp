@@ -80,6 +80,8 @@ namespace SharpCpp
                 // No check for accessibility: if the type is visible from the specific class or not.
 
                 switch (type) {
+                    case "shared_ptr":
+                        return "<memory>";
                     case "int32_t":
                         return "<cstdint>";
                     default:

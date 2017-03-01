@@ -165,71 +165,162 @@ namespace SharpCpp
 
                     // Body:
 
-                    var block = new YBlock();
-
-                    foreach (var s in inputMethod.Body.Statements) {
-                        if (s is ReturnStatementSyntax) { // return
-                            var returnStatement = (ReturnStatementSyntax)s;
-                            YExpr returnExpression = null;
-
-                            if (returnStatement.Expression is IdentifierNameSyntax) {
-                                returnExpression = new YIdentifierExpr((IdentifierNameSyntax)returnStatement.Expression);
-                            } else {
-                                //throw new TUnsupportedException();
-                            }
-
-                            if (returnExpression != null) {
-                                block.Statements.Add(new YReturn(returnExpression));
-                            }
-
-                        } else if (s is ExpressionStatementSyntax) { // assignment
-                            var expressionStatement = (ExpressionStatementSyntax)s;
-
-                            if (expressionStatement.Expression is AssignmentExpressionSyntax) {
-                                var assignmentExpression = (AssignmentExpressionSyntax)expressionStatement.Expression;
-
-                                YExpr left = null;
-
-                                if (assignmentExpression.Left is MemberAccessExpressionSyntax) {
-                                    var memberAccessExpression = (MemberAccessExpressionSyntax)assignmentExpression.Left;
-
-                                    YExpr expr = null;
-
-                                    if (memberAccessExpression.Expression is ThisExpressionSyntax) {
-                                        expr = YExpr.This;
-                                    }
-
-                                    left = new YMemberAccessExpr(
-                                        expr,
-                                        memberAccessExpression.Name.Identifier.ToString()
-                                    );
-                                } else if (assignmentExpression.Left is IdentifierNameSyntax) {
-                                    left = new YIdentifierExpr((IdentifierNameSyntax)assignmentExpression.Left);
-                                }
-
-                                YExpr right = null;
-
-                                if (assignmentExpression.Right is IdentifierNameSyntax) {
-                                    right = new YIdentifierExpr((IdentifierNameSyntax)assignmentExpression.Right);
-                                }
-
-                                if (left != null && right != null) {
-                                    block.Statements.Add(new YAssign(left, right));
-                                }
-                            } else {
-                                //throw new TUnsupportedException();
-                            }
-
-                        } else {
-                            //throw new TUnsupportedException();
-                        }
-                    }
-
                     method.Visibility = inputMethod.Modifiers.GetYVisibility();
-                    method.Body = block;
+                    method.Body = ProcessStatement(inputMethod.Body);
                     @class.AddChild(method);
                 }
             }
+        }
+
+        // todo here could be generics or reflection
+
+        YStatement ProcessStatement(StatementSyntax statement)
+        {
+            if (statement is IfStatementSyntax) {
+                return ProcessStatement((IfStatementSyntax)statement);
+            } else if (statement is BlockSyntax) {
+                return ProcessStatement((BlockSyntax)statement);
+            } else if (statement is ReturnStatementSyntax) {
+                return ProcessStatement((ReturnStatementSyntax)statement);
+            } else if (statement is ExpressionStatementSyntax) {
+                return ProcessStatement((ExpressionStatementSyntax)statement);
+            }
+
+            throw new TException("Unable to process statement");
+        }
+
+        YExpr ProcessExpr(ExpressionSyntax expr)
+        {
+            if (expr is BinaryExpressionSyntax) {
+                return ProcessExpr((BinaryExpressionSyntax)expr);
+            } else if (expr is IdentifierNameSyntax) {
+                return ProcessExpr((IdentifierNameSyntax)expr);
+            } else if (expr is LiteralExpressionSyntax) {
+                return ProcessExpr((LiteralExpressionSyntax)expr);
+            } else if (expr is PrefixUnaryExpressionSyntax) {
+                return ProcessExpr((PrefixUnaryExpressionSyntax)expr);
+            } else if (expr is InvocationExpressionSyntax) {
+                return ProcessExpr((InvocationExpressionSyntax)expr);
+            } else if (expr is MemberAccessExpressionSyntax) {
+                return ProcessExpr((MemberAccessExpressionSyntax)expr);
+            } else if (expr is ThisExpressionSyntax) {
+                return ProcessExpr((ThisExpressionSyntax)expr);
+            }
+
+            throw new TException("Unable to process expression");
+        }
+
+        YExpr ProcessExpr(IdentifierNameSyntax expr)
+        {
+            return new YIdentifierExpr(expr);
+        }
+
+        YExpr ProcessExpr(LiteralExpressionSyntax expr)
+        {
+            if (expr.Token.IsKind(SyntaxKind.NullKeyword)) {
+                return YLiteralExpr.Null;
+            } else if (expr.Token.IsKind(SyntaxKind.NumericLiteralToken)) {
+                return new YLiteralExpr(expr.Token.Value); // looks same as YConstExpr
+            }
+
+            throw new TException("Unable to process expr");
+        }
+
+        YExpr ProcessExpr(PrefixUnaryExpressionSyntax expr)
+        {
+            var operand = ProcessExpr(expr.Operand);
+            var @operator = ProcessOperator(expr.OperatorToken);
+
+            return new YPrefixUnaryExpr(@operator, operand);
+        }
+
+        YExpr ProcessExpr(MemberAccessExpressionSyntax memberAccessExpression)
+        {
+            YExpr expr = ProcessExpr(memberAccessExpression.Expression);
+
+            return new YMemberAccessExpr(
+                expr,
+                memberAccessExpression.Name.Identifier.ToString()
+            );
+        }
+
+        YExpr ProcessExpr(ThisExpressionSyntax expr)
+        {
+            return YExpr.This;
+        }
+
+        YExpr ProcessExpr(InvocationExpressionSyntax expr)
+        {
+            if (expr.ArgumentList.ChildNodes().Count() > 0) {
+                throw new TException("Unable to process expression");
+            }
+
+            return new YInvocation(ProcessExpr(expr.Expression));
+        }
+
+        YExpr ProcessExpr(BinaryExpressionSyntax binaryExpression)
+        {
+            var left = ProcessExpr(binaryExpression.Left);
+            var right = ProcessExpr(binaryExpression.Right);
+            var operation = ProcessOperator(binaryExpression.OperatorToken);
+
+            return new YBinaryExpr(left, right, operation);
+        }
+
+        YStatement ProcessStatement(IfStatementSyntax ifStatement)
+        {
+            YExpr condition = ProcessExpr(ifStatement.Condition);
+            YStatement statement = ProcessStatement(ifStatement.Statement);
+            YStatement elseStatement = ProcessStatement(ifStatement.Else.Statement);
+
+            if (condition != null && statement != null) {
+                return new YIf(condition, statement, elseStatement);
+            }
+
+            throw new TException("Unable to process statement");
+        }
+
+        YStatement ProcessStatement(ReturnStatementSyntax statement)
+        {
+            return new YReturn(ProcessExpr(statement.Expression));
+        }
+
+        YStatement ProcessStatement(BlockSyntax statement)
+        {
+            var block = new YBlock();
+
+            foreach (var s in statement.Statements) {
+                block.Statements.Add(ProcessStatement(s));
+            }
+
+            return block;
+        }
+
+        YStatement ProcessStatement(ExpressionStatementSyntax statement)
+        {
+            if (statement.Expression is AssignmentExpressionSyntax) { // ?!
+                var assignmentExpression = (AssignmentExpressionSyntax)statement.Expression;
+
+                YExpr left = ProcessExpr(assignmentExpression.Left);
+                YExpr right = ProcessExpr(assignmentExpression.Right);
+                             
+                if (left != null && right != null) {
+                    return new YAssign(left, right); // expression or statement?!
+                }
+            }
+
+            throw new TException("Unable to process statement");
+        }
+      
+        YOperator ProcessOperator(SyntaxToken token)
+        {
+            if (token.IsKind(SyntaxKind.EqualsEqualsToken)) {
+                return YOperator.EqualsEquals;
+            } else if (token.IsKind(SyntaxKind.MinusToken)) {
+                return YOperator.Minus;
+            }
+
+            throw new TException("Unable to process opeartion");
         }
     }
 

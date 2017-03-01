@@ -37,10 +37,15 @@ namespace SharpCpp
             } else if (type is YRefType) {
                 var name = ((YRefType)type).Name;
 
-                include = _includeFinder.FindInclude(name);
+                include = _includeFinder.FindInclude("shared_ptr");
                 if (include != null) {
                     _includes.Add(include);
-                    return $"std::shared_ptr<{name}>";
+
+                    include = _includeFinder.FindInclude(name);
+                    if (include != null) {
+                        _includes.Add(include);
+                        return $"std::shared_ptr<{name}>";
+                    }
                 }
 
                 throw new TException("Can't find include for referenced type");

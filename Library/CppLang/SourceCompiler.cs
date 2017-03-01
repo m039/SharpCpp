@@ -131,6 +131,17 @@ namespace SharpCpp
                 builder.Append("=");
                 AppendEx(builder, assign.Right);
                 builder.Append(";");
+            } else if (statement is YIf) {
+                var @if = (YIf)statement;
+
+                builder.Append("if (");
+                AppendEx(builder, @if.Condition);
+                builder.Append(") ");
+                AppendEx(builder, @if.Statement);
+                if (@if.ElseStatement != null) {
+                    builder.Append(" else ");
+                    AppendEx(builder, @if.ElseStatement);
+                }
             }
         }
 
@@ -151,8 +162,43 @@ namespace SharpCpp
                 builder.Append(memberAccess.Name);
             } else if (expr is YIdentifierExpr) {
                 builder.Append(((YIdentifierExpr)expr).Name);
+            } else if (expr is YBinaryExpr) {
+                var binary = (YBinaryExpr)expr;
+
+                AppendEx(builder, binary.Left);
+                builder.Append(" ");
+                AppendEx(builder, binary.Operator);
+                builder.Append(" ");
+                AppendEx(builder, binary.Right);
+            } else if (expr is YLiteralExpr) {
+                var literal = (YLiteralExpr)expr;
+                if (literal == YLiteralExpr.Null) {
+                    builder.Append("nullptr");
+                } else {
+                    builder.Append(literal.Value);
+                }
+            } else if (expr is YPrefixUnaryExpr) {
+                var prefixUnari = (YPrefixUnaryExpr)expr;
+
+                AppendEx(builder, prefixUnari.Operator);
+                AppendEx(builder, prefixUnari.Operand);
+            } else if (expr is YInvocation) {
+                var invocation = (YInvocation)expr;
+
+                AppendEx(builder, invocation.Expression);
+
+                // no arguments
+                builder.Append("()");
             }
         }
 
+        static public void AppendEx(this StringBuilder builder, YOperator op)
+        {
+            if (op == YOperator.EqualsEquals) {
+                builder.Append("==");
+            } else if (op == YOperator.Minus) {
+                builder.Append("-");
+            }
+        }
     }
 }

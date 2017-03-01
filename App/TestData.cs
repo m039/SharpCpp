@@ -56,7 +56,8 @@ namespace SharpCpp
 
     }
 }";
-
+        
+        // done
         const string InputCode4 = @"namespace CSharpFooBarLibrary
 {
     public class Bar
