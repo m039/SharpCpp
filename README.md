@@ -5,7 +5,7 @@ SharpCpp is a transpiler that generates C++ code from C# code. Currently only [X
 _It is just a raw idea, highly experimental and future of the project is unknown. [Read more..](https://github.com/m039/SharpCpp/blob/develop/DevJournal.md)_
 
 # Usage
-* You can use Mac application to test functionality, there are no other options for now.
+* You can use Mac app to test functionality, there are no other options for now.
 * [Uncrustify](https://github.com/uncrustify/uncrustify) is needed for the library to work. 
 
 ## Inspiration is taken from
