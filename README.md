@@ -6,7 +6,7 @@ _It is just a raw idea, highly experimental and future of the project is unknown
 
 # Usage
 * You can use the app to test functionality. (Mac only)
-* [Uncrustify](https://github.com/uncrustify/uncrustify) is needed for the library to function. 
+* [Uncrustify](https://github.com/uncrustify/uncrustify) is needed for the library to operate. 
 
 ## Inspiration is taken from
 * [Blackmire](https://github.com/ActiveMesa/Blackmire)
