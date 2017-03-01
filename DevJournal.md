@@ -4,7 +4,7 @@ This project is my hobby project to get familar with Roslyn.
 
 # True intention
 
-This is a note for a stranger, who as me, is looking for the answer how to translate his C# code to C++ (or vice-versa), I have bad and good news for you.
+This is a note for a stranger, who as me, is looking for the answer how to translate his C# code to C++ (or vice versa), I have bad and good news for you.
 
 Bad: in general it is a bad idea, sometimes very bad, most of companies offer AOT, not translators. But what I also realize, it could be very good if you know exactly how your transpiler works.
 
